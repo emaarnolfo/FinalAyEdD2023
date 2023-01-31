@@ -1,0 +1,3 @@
+/home/emanuel/FinalAyEdD2023/cmake-build-debug/CMakeFiles/FinalAyEdD2023.dir
+/home/emanuel/FinalAyEdD2023/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/emanuel/FinalAyEdD2023/cmake-build-debug/CMakeFiles/rebuild_cache.dir
