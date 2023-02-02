@@ -5,33 +5,41 @@
 #ifndef FINALAYEDD2023_PAGINA_H
 #define FINALAYEDD2023_PAGINA_H
 
+#include "IP_Struct.h"
+#include <map>
+
 using namespace std;
 
 class Pagina {
-    int ID;
+    int id;
     int peso;
-    short int destino;
+    struct IP destino;
+    inline static int contPaginas = 1;
+public:
 
-    public:
     //Constructor
-    Pagina(int ID, int peso, short int destino);
+    Pagina(int peso, IP destino)
+        : peso(peso), destino(destino) {
+        id = contPaginas++;
+    }
 
     //Getters
-    int getId() const { return ID; }
+    int getId() const { return id; }
     int getPeso() const { return peso; }
-    short getDestino() const { return destino; }
+    IP getDestino() const { return destino; }
 
 };
 
 class Paquete: public Pagina {
     int ID_paq;
     int peso_paq;
+    inline static int contPaquetes = 1;
 
 public:
     //Constructor
-    Paquete(int id, int peso, short destino, int idPaq, int pesoPaq, short destinoPaq) :
-    Pagina(id, peso, destino),
-    ID_paq(idPaq), peso_paq(pesoPaq) {}
+    Paquete(int peso, const IP &destino, int idPaq, int pesoPaq) : Pagina(peso, destino),  peso_paq(pesoPaq){
+        ID_paq = contPaquetes ++;
+    }
 
     //Getters
     int getIdPaq() const { return ID_paq; }

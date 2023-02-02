@@ -7,6 +7,9 @@
 
 #include <iostream>
 
+
+using namespace std;
+
 class Arista;
 class Terminal;
 
@@ -22,8 +25,8 @@ public:
     Router(short int IP);
 };
 
-class Terminal: public Router {
 
-};
+
+
 
 #endif //FINALAYEDD_ROUTER_H

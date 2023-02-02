@@ -36,10 +36,10 @@ public:
     T cabeza();                         //retorna el dato del primer nodo
     Lista* resto();                     //retorna el puntero al "resto" de la lista
                                         //resto= lo que queda de la lista sin la cabeza
+    T get(int index);
     string toPrint(string p);
     void impre();
-    T suma(T i);
-    int size();
+    int size();                         //Devuele el tamaño de la lista
     bool esta(T d);                     // detecta si d esta en la lista
     void borrarDato(T d){               //borra el nodo que contiene d
         borrarD(d, NULL);
@@ -47,7 +47,6 @@ public:
     void borrar();                      //borra la cabeza de la lista
     void borrar_last();                 //borra el ultimo nodo de la lista
     void concat(Lista<T>* l1);          //Le transfiere los datos de l1 a this
-    Lista<T>* copy();                   //hace una copia de la lista
     void tomar(int n);                  //deja "vivos" los n primeros nodos y borra el resto
     void addOrdenado(T d){              //sumar nodos a la lista Ordenados de menor a MAYOR
         addO(d, NULL);
@@ -117,8 +116,8 @@ template <class T>
 T Lista<T>::cabeza()
 {
     if (this->esvacia()) {
-        cout << " Error, Cabeza de lista vacia";
-        return NULL;
+        cout << " ERROR, Cabeza de lista vacia";
+        //return NULL;
     }
     return czo->get_dato();
 }
@@ -130,19 +129,12 @@ Lista<T>* Lista<T>::resto()
     return (l);
 }
 
-
-
-template <class T>
-T Lista<T>::suma(T i)
-{    //cout<<" i al entrar= "<<i<<endl;
-    if (this->esvacia()) {
-        return i;
-    }
-    else {
-
-        //cout<<"this->cabeza()= "<<this->cabeza()<<endl;
-        return this->resto()->suma(i + this->cabeza());
-    }
+template<class T>
+T Lista<T>::get(int index) {
+    if(index == 1)
+        return cabeza();
+    else
+        this->resto()->get(index-1);
 }
 
 template <class T> int Lista<T>::size()
@@ -177,13 +169,6 @@ template <class T> void Lista<T>::concat(Lista<T>* l1)
         this->concat(l1->resto());
         this->add(l1->cabeza());
     }
-}
-
-template <class T> Lista<T>* Lista<T>::copy()
-{
-    auto* aux = new Lista();
-    aux->concat(this);
-    return aux;
 }
 
 template <class T> void Lista<T>::tomar(int n)

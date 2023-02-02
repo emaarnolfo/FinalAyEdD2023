@@ -11,7 +11,8 @@
 #include <algorithm>
 #include <iostream>
 #include "Color.h"
-#include "Listas.h"
+#include "Terminal.h"
+
 
 
 using namespace std;
