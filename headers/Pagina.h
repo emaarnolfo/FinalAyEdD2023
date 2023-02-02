@@ -13,7 +13,10 @@ class Pagina {
     short int destino;
 
     public:
+    //Constructor
     Pagina(int ID, int peso, short int destino);
+
+    //Getters
     int getId() const { return ID; }
     int getPeso() const { return peso; }
     short getDestino() const { return destino; }
@@ -23,15 +26,16 @@ class Pagina {
 class Paquete: public Pagina {
     int ID_paq;
     int peso_paq;
-    short int destino_paq;
 
 public:
+    //Constructor
     Paquete(int id, int peso, short destino, int idPaq, int pesoPaq, short destinoPaq) :
     Pagina(id, peso, destino),
-    ID_paq(idPaq), peso_paq(pesoPaq), destino_paq(destinoPaq) {}
+    ID_paq(idPaq), peso_paq(pesoPaq) {}
+
+    //Getters
     int getIdPaq() const { return ID_paq; }
     int getPesoPaq() const { return peso_paq; }
-    short getDestinoPaq() const { return destino_paq; }
 
 };
 
