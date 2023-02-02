@@ -9,6 +9,10 @@ Router::Router(short int IP) {
     this->next = NULL;
     this->arista = NULL;
 
+
+    //Paquetes
+    //Paginas
+
     //std::cout << "Constructor Router" << std::endl;
 
 }

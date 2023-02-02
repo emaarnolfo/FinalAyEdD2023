@@ -112,11 +112,14 @@ void Administrador::Dijkstra(short IPorigen)
     else
     {
         map<Router*, map<Router*, int>> matriz;
-        map<Router*, bool> visitados;
-        map<Router*, Router*> rutas;
-        map<Router*, int> cola;         //Se debe reemplazar por una cola simple
-        map<Router*, int> distancias;
+        map<Router*, bool> visitados;   //Par ordenado con los Routers de la red y su booleano que indica si fue visitado
+        map<Router*, Router*> rutas;    //Ruta que va desde el origen ingresado hacia cada Router de la red
+        map<Router*, int> cola;
+        //Cola<Router*>* cola2;           //Cola que indica los siguientes nodos a visitar
+        map<Router*, int> distancias;   //Distancia desde el router origen ingresado hacia cada Router
 
+
+        //cola2 = new Cola<Router*>();
         Router* ri = primero;
 
         while(ri != NULL)
@@ -145,13 +148,16 @@ void Administrador::Dijkstra(short IPorigen)
 
         distancias[r_origen] = 0;
         visitados[r_origen] = true;
+        //cola2->encolar(r_origen);
         cola[r_origen] = distancias[r_origen];
+
 
         //Recorremos los nodos para sacar los recorridos
         while(!cola.empty())
         {
             map<Router*, int>::iterator iter = min_element(cola.begin(), cola.end(), costoMinimo);
-            visitados[iter->first] = true;
+
+            //Router* r_iter = cola2->tope();
 
             Arista* ai = iter->first->arista;
 
@@ -164,17 +170,21 @@ void Administrador::Dijkstra(short IPorigen)
                         distancias[ai->destino] = distancias[iter->first] + matriz[iter->first][ai->destino];
                         rutas[ai->destino] = iter->first;
                         cola[ai->destino] = distancias[ai->destino];
+                        //cola2->encolar(ai->destino);
                     }
                 }
                 ai = ai->next;
             }
 
+            visitados[iter->first] = true;
+            //cola2->desencolar();
             cola.erase(iter->first);
         }
 
         //Muestra los vertices destino con su respectivo peso total
         for(map<Router*, int>::iterator i = distancias.begin(); i != distancias.end(); i++)
             cout << i->first->IP <<": " << i->second << endl;
+
 
         //Muestra las rutas completas
         for(map<Router*, Router*>::iterator i = rutas.begin(); i != rutas.end(); i++)
@@ -189,9 +199,6 @@ void Administrador::Dijkstra(short IPorigen)
 
             cout << endl;
         }
-
-        if(cola.empty())
-            cout << "Cola vacia" <<endl;
 
     }
 }

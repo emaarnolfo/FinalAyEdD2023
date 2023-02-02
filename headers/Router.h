@@ -8,17 +8,22 @@
 #include <iostream>
 
 class Arista;
+class Terminal;
 
 class Router {
 public:
     short int IP;
     Router* next;
     Arista* arista;
+    Terminal* terminal;
 
     friend class Arista;
 
     Router(short int IP);
 };
 
+class Terminal: public Router {
+
+};
 
 #endif //FINALAYEDD_ROUTER_H
