@@ -7,7 +7,6 @@
 
 #include "Arista.h"
 #include "Router.h"
-#include "Listas.h"
 #include <map>
 #include <algorithm>
 #include "Color.h"

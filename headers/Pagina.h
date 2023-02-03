@@ -6,9 +6,11 @@
 #define FINALAYEDD2023_PAGINA_H
 
 #include "IP_Struct.h"
-#include <map>
+#include "Listas.h"
 
 using namespace std;
+
+class Paquete;
 
 class Pagina {
     int id;
@@ -16,35 +18,15 @@ class Pagina {
     struct IP destino;
     inline static int contPaginas = 1;          //Variable estatica para generar ID diferentes en cada instancia de la clase
 public:
-
-    //Constructor
-    Pagina(int peso, IP destino)
-        : peso(peso), destino(destino) {
-        id = contPaginas++;
-    }
+    Pagina(int peso, IP destino);
 
     //Getters
     int getId() const { return id; }
     int getPeso() const { return peso; }
     IP getDestino() const { return destino; }
-
+    Cola<Paquete>* desarmarPagina();
 };
 
-class Paquete: public Pagina {
-    int ID_paq;
-    int peso_paq;
-    inline static int contPaquetes = 1;
 
-public:
-    //Constructor
-    Paquete(int peso, const IP &destino, int idPaq, int pesoPaq) : Pagina(peso, destino),  peso_paq(pesoPaq){
-        ID_paq = contPaquetes ++;
-    }
-
-    //Getters
-    int getIdPaq() const { return ID_paq; }
-    int getPesoPaq() const { return peso_paq; }
-
-};
 
 #endif //FINALAYEDD2023_PAGINA_H

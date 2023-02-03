@@ -5,7 +5,7 @@
 #ifndef FINALAYEDD2023_TERMINAL_H
 #define FINALAYEDD2023_TERMINAL_H
 
-#include "Listas.h"
+
 #include "Pagina.h"
 #include <cstdlib>
 

@@ -4,6 +4,8 @@
 
 #include "../headers/Terminal.h"
 
+using namespace std;
+
 //CONSTRUCTOR de Terminal
 Terminal::Terminal(std::uint8_t  ipTerminal, std::uint8_t  ipRouter){
     this->ipRouter = ipRouter;
@@ -12,15 +14,15 @@ Terminal::Terminal(std::uint8_t  ipTerminal, std::uint8_t  ipRouter){
     pagRecibidas = new Cola<Pagina>();
     pagPendiendes = new Cola<Pagina>();
 
-    IP* nvoTerminal = new IP{ipTerminal, ipRouter};
+    IP* nvoTerminal = new IP{ipRouter, ipTerminal};
     tabla->add(nvoTerminal);
 }
 
 Pagina* Terminal::generarPagina() {
 
-    int peso = 1 + rand() %50;                  //Genera un peso aleatorio para la pagina
-    int random = 1 + rand() % tabla->size();    //Cantidad de terminales (posibltes destinos)
-    struct IP* destExistente = tabla->get(random);   //Devuelve un destino aleatorio que corresponde a alguna terminal existente
+    int peso = 50 + rand() %100;                         //Genera un peso entre 50 y 149
+    int indice = 1 + rand() % tabla->size();             //Cantidad de terminales (posibltes destinos)
+    struct IP* destExistente = tabla->get(indice); //Devuelve un destino aleatorio que corresponde a alguna terminal existente
 
     IP destino = {destExistente->ipRouter, destExistente->ipTerminal};
 
