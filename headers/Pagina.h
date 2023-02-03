@@ -14,7 +14,7 @@ class Pagina {
     int id;
     int peso;
     struct IP destino;
-    inline static int contPaginas = 1;
+    inline static int contPaginas = 1;          //Variable estatica para generar ID diferentes en cada instancia de la clase
 public:
 
     //Constructor

@@ -103,9 +103,10 @@ bool costoMinimo(const pair<Router*, int>& a, const pair<Router*, int>& b)
     return a.second < b.second;
 }
 
-void Administrador::Dijkstra(short IPorigen)
+void Administrador::Dijkstra(short IPorigen, short IPdestino)
 {
     Router* r_origen = getRouter(IPorigen);
+    Router* r_destino = getRouter(IPdestino);
 
     if(r_origen == NULL)
         cout << "El vertice origen no existe" <<endl;
@@ -114,8 +115,8 @@ void Administrador::Dijkstra(short IPorigen)
         map<Router*, map<Router*, int>> matriz;
         map<Router*, bool> visitados;   //Par ordenado con los Routers de la red y su booleano que indica si fue visitado
         map<Router*, Router*> rutas;    //Ruta que va desde el origen ingresado hacia cada Router de la red
-        map<Router*, int> cola;
-        //Cola<Router*>* cola2;           //Cola que indica los siguientes nodos a visitar
+        map<Router*, int> cola;         //Se puede implementar con Lista y agregar ordenado
+        //Cola<Router*>* cola2;         //Cola que indica los siguientes nodos a visitar
         map<Router*, int> distancias;   //Distancia desde el router origen ingresado hacia cada Router
 
 
@@ -156,6 +157,14 @@ void Administrador::Dijkstra(short IPorigen)
         while(!cola.empty())
         {
             map<Router*, int>::iterator iter = min_element(cola.begin(), cola.end(), costoMinimo);
+
+            /*
+             * Verificar si el destino ha sido alcanzado y cort
+             */
+            if (iter->first->IP == r_destino->IP) {
+                cout << "Se llego al destino" << endl;
+                break;
+            }
 
             //Router* r_iter = cola2->tope();
 

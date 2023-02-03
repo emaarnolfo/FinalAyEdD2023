@@ -8,8 +8,9 @@
 #include "stdint.h"
 
 struct IP{
-    uint8_t IP_router;
-    uint8_t IP_terminal;
+    std::uint8_t ipRouter;              //Parte de la IP correspondiente al router de un byte
+    std::uint8_t ipTerminal;            //Parte de la IP correspondiente al terminal de un byte
 };
+
 
 #endif //FINALAYEDD2023_IP_STRUCT_H

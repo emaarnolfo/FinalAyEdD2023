@@ -11,14 +11,13 @@ using namespace std;
 
 template <class T> class Nodo {
 private:
-    T dato;
+    T* dato;
     Nodo* next;
 public:
-    Nodo() { next = NULL; };
-    explicit Nodo(T a) { dato = a; next = NULL; };
-    void set_dato(T a) { dato = a; };
+    Nodo() { next = nullptr; };
+    Nodo(T* a) { dato = a; next = nullptr; };
     void set_next(Nodo* n) { next = n; };
-    T get_dato() { return dato; };
+    T* get_dato() { return dato; };
     Nodo* get_next() { return next; };
     bool es_vacio() { return next == NULL; }
 };
@@ -31,14 +30,12 @@ public:
     Lista() { czo = new Nodo<T>(); };
     explicit Lista(Nodo<T>* n) { czo = n; };
     //~Lista(void);
-    void add(T d);                      //sumar nodos a la lista
+    void add(T* d);                      //sumar nodos a la lista
     bool esvacia();                     //Retorna true si la lista esta vacia
-    T cabeza();                         //retorna el dato del primer nodo
+    T* cabeza();                         //retorna el dato del primer nodo
     Lista* resto();                     //retorna el puntero al "resto" de la lista
-                                        //resto= lo que queda de la lista sin la cabeza
-    T get(int index);
-    string toPrint(string p);
-    void impre();
+    //resto= lo que queda de la lista sin la cabeza
+    T* get(int index);
     int size();                         //Devuele el tamaño de la lista
     bool esta(T d);                     // detecta si d esta en la lista
     void borrarDato(T d){               //borra el nodo que contiene d
@@ -51,7 +48,7 @@ public:
     void addOrdenado(T d){              //sumar nodos a la lista Ordenados de menor a MAYOR
         addO(d, NULL);
     };
-    T last();                           //retorna el ultimo nodo de la lista
+    T* last();                           //retorna el ultimo nodo de la lista
 };
 
 template <class T> class Pila:public Lista<T>{
@@ -66,42 +63,36 @@ public:
 template <class T> class Cola:public Lista<T>{
 public:
     Cola(){Lista<T>();};
-    T tope()                 { return this->last(); };
+    T* tope()                 { return this->last(); };
     bool colavacia()         { return this->esvacia(); };
-    void encolar(T a)        { this->add(a); };
+    void encolar(T* a)        { this->add(a); };
     void desencolar()        { this->borrar_last(); };
-    T ultimo()               { return this->cabeza(); };
-    string imprimir(string s){ return this->toPrint(s); };
+    T* ultimo()               { return this->cabeza(); };
+    //string imprimir(string s){ return this->toPrint(s); };
 };
 
-template <class T>
-string Lista<T>::toPrint(string p)
-{
-    if (this->esvacia()) {
-        return p;
-    }
-    else {
-        //std::ostringstream stm;
-        ostringstream stm;
-        stm << this->cabeza() << "-" << this->resto()->toPrint(p);
-        //cout<<endl<<" stm.str()= "<<stm.str()<<endl;
-        return stm.str();
-    }
+template<class T>
+T* Lista<T>::get(int index){
+    if(index == 1)
+        return cabeza();
+    else
+        return this->resto()->get(index-1);
 }
 
-
 template <class T>
-T Lista<T>::last()
+T* Lista<T>::last()
 {
     if (!this->esvacia()) {
-        if (this->resto()->esvacia())return this->cabeza();
+        if (this->resto()->esvacia())
+            return this->cabeza();
         return this->resto()->last();
-    }return 0;
+    }
+    return 0;
 }
 
 
 template <class T>
-void Lista<T>::add(T d) //100
+void Lista<T>::add(T* d) //100
 {
     auto nuevo = new Nodo<T>(d);
     nuevo->set_next(czo);
@@ -113,11 +104,10 @@ bool Lista<T>::esvacia()
     return czo->es_vacio();
 }
 template <class T>
-T Lista<T>::cabeza()
+T* Lista<T>::cabeza()
 {
     if (this->esvacia()) {
         cout << " ERROR, Cabeza de lista vacia";
-        //return NULL;
     }
     return czo->get_dato();
 }
@@ -129,13 +119,6 @@ Lista<T>* Lista<T>::resto()
     return (l);
 }
 
-template<class T>
-T Lista<T>::get(int index) {
-    if(index == 1)
-        return cabeza();
-    else
-        this->resto()->get(index-1);
-}
 
 template <class T> int Lista<T>::size()
 {
@@ -179,16 +162,6 @@ template <class T> void Lista<T>::tomar(int n)
     }
 }
 
-template <class T> void Lista<T>::impre()
-{
-    Nodo<T>* aux;
-    aux = czo;
-    while (aux->get_next() != NULL) {
-        cout << aux->get_dato() << endl;
-        aux = aux->get_next();
-    }
-}
-
 template <class T> bool Lista<T>::esta(T d)
 {// busca d en la lista
     if (this->esvacia()) return false;
@@ -214,5 +187,4 @@ void Lista<T>::borrarD(T d, Nodo<T>* ant)
 
     }
 }
-
 #endif //FINALAYEDD2023_LISTAS_H

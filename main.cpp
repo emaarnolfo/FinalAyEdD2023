@@ -106,10 +106,13 @@ int main() {
                 else
                 {
                     short int IPorigen;
+                    short int ipDestino;
                     cout << "Ingrese el nombre del vertice origen: ";
                     cin >> IPorigen;
+                    cout << "Ingrese el nombre del vertice destino: ";
+                    cin >> ipDestino;
 
-                    admin->Dijkstra(IPorigen);
+                    admin->Dijkstra(IPorigen, ipDestino);
                 }
 
                 break;
