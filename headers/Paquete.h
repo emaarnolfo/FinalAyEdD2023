@@ -14,13 +14,16 @@ class Paquete: public Pagina {
 
 public:
     //Constructor
-    Paquete(int peso, const IP destino, int pesoPaq) : Pagina(peso, destino), peso_paq(pesoPaq){
+    Paquete(int idPag, int peso, const IP destino, int pesoPaq) : Pagina(peso, destino), peso_paq(pesoPaq){
+        this->setID(idPag);
         ID_paq = contPaquetes ++;
     }
 
     //Getters
-    int getIdPaq() const { return ID_paq; }
-    int getPesoPaq() const { return peso_paq; }
+    int getIdPag() { return getId(); }
+    int gerPesoPag() { return getPeso(); };
+    int getIdpaq() { return ID_paq; }
+    int getPesopaq() { return peso_paq; }
 
 };
 

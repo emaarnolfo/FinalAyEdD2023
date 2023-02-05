@@ -13,8 +13,8 @@
 using namespace std;
 
 class Terminal {
-    std::uint8_t ipTerminal;
-    std::uint8_t ipRouter;
+    uint8_t ipTerminal;
+    uint8_t ipRouter;
     Terminal* next;
 
     Cola<Pagina>* pagRecibidas;                         //Cola de las paginas que va recibiendo la Terminal
@@ -22,7 +22,7 @@ class Terminal {
     inline static Lista<IP>* tabla = new Lista<IP>();   //Lista de todas las terminales existentes
                                                         //Variable creada para darle un destino existente a las paginas que se van generando
 public:
-    Terminal(std::uint8_t  ipTerminal, std::uint8_t  ipRouter);
+    Terminal(uint8_t  ipTerminal, uint8_t  ipRouter);
     Pagina* generarPagina();
 };
 

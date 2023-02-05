@@ -15,16 +15,16 @@ class Paquete;
 class Pagina {
     int id;
     int peso;
-    struct IP destino;
+    IP destino;
     inline static int contPaginas = 1;          //Variable estatica para generar ID diferentes en cada instancia de la clase
 public:
     Pagina(int peso, IP destino);
 
     //Getters
-    int getId() const { return id; }
-    int getPeso() const { return peso; }
-    IP getDestino() const { return destino; }
-    Cola<Paquete>* desarmarPagina();
+    int getId() { return id; }
+    int getPeso() { return peso; }
+    IP getDestino() { return destino; }
+    void setID(int id) { this->id = id; };
 };
 
 

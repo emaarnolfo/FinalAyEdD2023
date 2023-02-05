@@ -9,6 +9,7 @@ Pagina::Pagina(int peso, IP destino) : peso(peso), destino(destino) {
     id = contPaginas++;
 }
 
+/*
 Cola<Paquete> *Pagina::desarmarPagina() {
 
     int numPaquetes = 1 + rand() % 30;              //10
@@ -29,3 +30,5 @@ Cola<Paquete> *Pagina::desarmarPagina() {
     return colaPaquetes;
 
 }
+
+*/
