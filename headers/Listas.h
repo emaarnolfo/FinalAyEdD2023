@@ -30,6 +30,7 @@ public:
     Lista() { czo = new Nodo<T>(); };
     explicit Lista(Nodo<T>* n) { czo = n; };
     //~Lista(void);
+    Nodo<T>* getCzo() { return czo; };
     void add(T* d);                      //sumar nodos a la lista
     bool esvacia();                     //Retorna true si la lista esta vacia
     T* cabeza();                         //retorna el dato del primer nodo
@@ -184,7 +185,6 @@ void Lista<T>::borrarD(T d, Nodo<T>* ant)
             }
         }
         else  this->resto()->borrarD(d, czo);
-
     }
 }
 #endif //FINALAYEDD2023_LISTAS_H
