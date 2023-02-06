@@ -83,11 +83,12 @@ void Administrador::mostrarListaAdyacencia()
     while(i != NULL)
     {
         Arista* j = i->arista;
-        cout << "\x1b[31m" << i->IP << " = ";
+        //printf(RED "%d = ", i->IP);
 
         while(j != NULL)
         {
-            cout << "\x1b[31m" << i->IP <<"\x1b[32m" <<"->" <<j->ancho_de_banda << "\x1b[31m" << "->" <<j->destino->IP;
+            //cout << "\x1b[31m" << i->IP <<"\x1b[32m" <<"->" <<j->ancho_de_banda << "\x1b[31m" << "->" <<j->destino->IP;
+            printf(RED "%d" GREEN "->%d" RED "->%d", i->IP, j->ancho_de_banda, j->destino->IP);
             if(j->next != NULL)
                 cout << " - ";
             j = j->next;
@@ -113,11 +114,11 @@ void Administrador::Dijkstra(short IPorigen, short IPdestino)
     else
     {
         map<Router*, map<Router*, int>> matriz;
-        map<Router*, bool> visitados;   //Par ordenado con los Routers de la red y su booleano que indica si fue visitado
-        map<Router*, Router*> rutas;    //Ruta que va desde el origen ingresado hacia cada Router de la red
-        map<Router*, int> cola;         //Se puede implementar con Lista y agregar ordenado
-        //Cola<Router*>* cola2;         //Cola que indica los siguientes nodos a visitar
-        map<Router*, int> distancias;   //Distancia desde el router origen ingresado hacia cada Router
+        map<Router*, bool> visitados;           //Par ordenado con los Routers de la red y su booleano que indica si fue visitado
+        map<Router*, Router*> rutas;            //Ruta que va desde el origen ingresado hacia cada Router de la red
+        map<Router*, int> cola;                 //Se puede implementar con Lista y agregar ordenado
+        //Cola<Router*>* cola2;                 //Cola que indica los siguientes nodos a visitar
+        map<Router*, int> distancias;           //Distancia desde el router origen ingresado hacia cada Router
 
 
         //cola2 = new Cola<Router*>();
@@ -159,7 +160,7 @@ void Administrador::Dijkstra(short IPorigen, short IPdestino)
             map<Router*, int>::iterator iter = min_element(cola.begin(), cola.end(), costoMinimo);
 
             /*
-             * Verificar si el destino ha sido alcanzado y cort
+             * Verificar si el destino ha sido alcanzado y corta
              */
             if (iter->first->IP == r_destino->IP) {
                 cout << "Se llego al destino" << endl;

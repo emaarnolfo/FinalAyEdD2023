@@ -18,7 +18,7 @@ private:
     void borrarPaquetes(int idPag, Nodo<Paquete>* ant, Lista<Paquete>* lista);
 
 public:
-    short int IP;
+    uint8_t IP;
     Router* next;
     Arista* arista;
 
@@ -30,7 +30,7 @@ public:
 
     friend class Arista;
 
-    Router(short int IP);
+    Router(uint8_t IP);
     void desarmarPagina(Pagina* pagina);
     void armarPaginas();
     void borrarPaq(int idPag, Lista<Paquete>* lista) { this->borrarPaquetes(idPag, nullptr, lista); };

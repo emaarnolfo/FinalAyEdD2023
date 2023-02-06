@@ -17,6 +17,7 @@ class Pagina {
     int peso;
     IP destino;
     inline static int contPaginas = 1;          //Variable estatica para generar ID diferentes en cada instancia de la clase
+
 public:
     Pagina(int peso, IP destino);               //Constructor con ID automatica. Se utiliza para crar nuevas paginas
     Pagina(int idPag, int peso, IP destino);    //Constructor con ID por parametro. Se utliza para rearmar paginas en el Router destinos

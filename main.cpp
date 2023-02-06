@@ -1,10 +1,18 @@
 #include <iostream>
 #include "headers/Administrador.h"
+#include "headers/LeerArchivo.h"
 
 using namespace  std;
 
 int main() {
 
+  //  string path = rutaActual();
+
+//    cout <<endl << path <<endl;
+
+    leerArchivo();
+
+    /*
     Administrador* admin = new Administrador();
 
 
@@ -126,6 +134,9 @@ int main() {
         cin.get();
         cin.get();
     }
+
+     */
+
     return 0;
 }
 

@@ -4,7 +4,7 @@
 
 #include "../headers/Router.h"
 
-Router::Router(short int IP) {
+Router::Router(uint8_t IP) {
     this->IP = IP;
     this->next = NULL;
     this->arista = NULL;

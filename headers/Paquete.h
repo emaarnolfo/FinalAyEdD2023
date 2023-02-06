@@ -20,7 +20,6 @@ public:
     }
 
     //Getters
-    int gerPesoPag() { return getPeso(); };
     int getIdpaq() { return ID_paq; }
     int getPesoPaq() { return peso_paq; }
 
