@@ -12,6 +12,7 @@
 using namespace std;
 
 class Arista;
+class Terminal;
 
 class Router {
 private:
@@ -22,16 +23,18 @@ public:
     Router* next;
     Arista* arista;
 
-    Lista<Terminal>* listaTerminales;  //Lista de todas las terminales conectadas al Router
-    Cola<Pagina>* pagRecibidas;        //Paginas que llegan desde las terminales. Las cuales se deben dividir en paquetes
-    Cola<Pagina>* pagListas;           //Paginas listas para mandar a la terminal correspondiente
-    Lista<Paquete>* paquetes;           //Paquetes listos para enviar al siguiente Router de acuerdo a su camino
-    Lista<Paquete>* paqEnDestino;       //Lista de Paquetes en el Router destino, en espera para armar la Pagina
+    Lista<Terminal>* listaTerminales = new Lista<Terminal>();       //Lista de todas las terminales conectadas al Router
+    Cola<Pagina>* pagRecibidas = new Cola<Pagina>();                //Paginas que llegan desde las terminales. Las cuales se deben dividir en paquetes
+    Cola<Pagina>* pagListas = new Cola<Pagina>();                   //Paginas listas para mandar a la terminal correspondiente
+    Lista<Paquete>* paquetes = new Lista<Paquete>();                //Paquetes listos para enviar al siguiente Router de acuerdo a su camino
+    Lista<Paquete>* paqEnDestino = new Lista<Paquete>();            //Lista de Paquetes en el Router destino, en espera para armar la Pagina
+
 
     friend class Arista;
 
     Router(uint8_t IP);
-    void desarmarPagina(Pagina* pagina);
+    void agregarTerminal(Terminal* terminal);
+    void desarmarPagina();
     void armarPaginas();
     void borrarPaq(int idPag, Lista<Paquete>* lista) { this->borrarPaquetes(idPag, nullptr, lista); };
 };

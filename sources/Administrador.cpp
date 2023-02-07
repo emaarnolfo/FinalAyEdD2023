@@ -5,18 +5,19 @@
 #include "../headers/Administrador.h"
 
 Administrador::Administrador() {
-    this->primero = NULL;
-    this->tamanio = 0;
+    this->routerCzo = NULL;
+    this->nroRouters = 0;
+    this->nroTerminales = 0;
 }
 
 bool Administrador::esVacio() {
-    if(primero == NULL)
+    if(routerCzo == NULL)
         return true;
     return false;
 }
 
-Router* Administrador::getRouter(short IP) {
-    Router* aux = primero;
+Router* Administrador::getRouter(uint8_t IP) {
+    Router* aux = routerCzo;
 
     while(aux != NULL)
     {
@@ -25,28 +26,53 @@ Router* Administrador::getRouter(short IP) {
 
         aux = aux->next;
     }
-
     return NULL;
 }
 
-void Administrador::insertarRouter(short int IP)
+void Administrador::addRouter(uint8_t IP)
 {
     Router* nuevo = new Router(IP);
 
 
     if(esVacio())
     {
-        primero = nuevo;
+        routerCzo = nuevo;
     }
     else
     {
-        Router* aux = primero;
+        Router* aux = routerCzo;
 
         while(aux->next != NULL)
             aux = aux->next;
 
         aux->next = nuevo;
-        tamanio++;
+        nroRouters++;
+    }
+}
+
+
+void Administrador::addTerminal(uint8_t ipRouter, uint8_t ipTerminal)
+{
+    Router* router = this->getRouter(ipRouter);
+
+    if(router != NULL) {
+        Terminal* nuevo = new Terminal(ipTerminal, ipRouter);
+        this->terminales->add(nuevo);
+        router->agregarTerminal(nuevo);
+        nroTerminales++;
+    } else {
+        cout << "No se puede agregar la terminal, no ha encontrado el Router especificado" << endl;
+
+    }
+}
+
+void Administrador::generarPaginas(int nroPaginas)
+{
+
+    for(int i = 0; i < nroPaginas; i++) {
+        int index = 1 + rand() % terminales->size();
+        Terminal *terminal = terminales->get(index);
+        terminal->generarPagina();
     }
 }
 
@@ -78,7 +104,7 @@ void Administrador::insertarArista(short IPorigen, short IPdestino, int ancho_de
 void Administrador::mostrarListaAdyacencia()
 {
     cout << "Lista de Adyacencia: " << RED <<"Routers " << GREEN << "Ancho de banda" <<endl;
-    Router* i = primero;
+    Router* i = routerCzo;
 
     while(i != NULL)
     {
@@ -122,7 +148,7 @@ void Administrador::Dijkstra(short IPorigen, short IPdestino)
 
 
         //cola2 = new Cola<Router*>();
-        Router* ri = primero;
+        Router* ri = routerCzo;
 
         while(ri != NULL)
         {
@@ -130,7 +156,7 @@ void Administrador::Dijkstra(short IPorigen, short IPdestino)
             rutas[ri] = NULL;
             distancias[ri] = numeric_limits<int>::max();
 
-            Router* rj = primero;
+            Router* rj = routerCzo;
 
             while(rj != NULL)
             {

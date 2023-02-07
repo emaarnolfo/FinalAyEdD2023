@@ -7,26 +7,33 @@
 using namespace std;
 
 //CONSTRUCTOR de Terminal
-Terminal::Terminal(std::uint8_t  ipTerminal, std::uint8_t  ipRouter){
+Terminal::Terminal(std::uint8_t  ipTerminal, std::uint8_t  ipRouter)
+{
     this->ipRouter = ipRouter;
     this->ipTerminal = ipTerminal;
-    next = nullptr;
-    pagRecibidas = new Cola<Pagina>();
-    pagPendiendes = new Cola<Pagina>();
+
+    this->pagRecibidas = new Cola<Pagina>();
+    this->pagPendiendes = new Cola<Pagina>();
 
     IP* nvoTerminal = new IP{ipRouter, ipTerminal};
     tabla->add(nvoTerminal);
 }
 
-Pagina* Terminal::generarPagina() {
-
+void Terminal::generarPagina()
+{
     int peso = 50 + rand() %100;                         //Genera un peso entre 50 y 149
-    int indice = 1 + rand() % tabla->size();             //Cantidad de terminales (posibltes destinos)
-    struct IP* destExistente = tabla->get(indice); //Devuelve un destino aleatorio que corresponde a alguna terminal existente
+    IP* destAux;
 
-    IP destino = {destExistente->ipRouter, destExistente->ipTerminal};
+    do{
+        int indice = 1 + rand() % tabla->size();                                                //Cantidad de terminales (posibles destinos)
+        destAux = tabla->get(indice);                                               //Devuelve un destino aleatorio que corresponde a alguna terminal existente
+    }while(destAux->ipTerminal != ipTerminal && destAux->ipRouter != ipRouter);     //Verifica que la terminal aleatoria no se la propia terminal
+
+    IP destino = {destAux->ipRouter, destAux->ipTerminal};
 
     Pagina* nuevaPag = new Pagina(peso, destino);
 
-    return nuevaPag;
+    delete destAux;
+
+    pagPendiendes->encolar(nuevaPag);
 }

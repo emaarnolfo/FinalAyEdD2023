@@ -8,31 +8,38 @@ Router::Router(uint8_t IP) {
     this->IP = IP;
     this->next = NULL;
     this->arista = NULL;
-
-    //Paquetes
-    //Paginas
-
-    //std::cout << "Constructor Router" << std::endl;
 }
 
-void Router::desarmarPagina(Pagina *pagina)
+void Router::agregarTerminal(Terminal* terminal)
 {
+    this->listaTerminales->add(terminal);
+}
 
-    int numPaquetes = 1 + rand() % 30;              //Numero aleatorio de paquetes entre 1 y 30
-    int pesoRestante = pagina->getPeso();           //Peso de la pagina a desarmar: el peso total de todos los paquetes juntos
-    int pesoPaquete = pesoRestante / numPaquetes;   //Peso de cada paquete
-
-    while(pesoRestante > pesoPaquete)
+void Router::desarmarPagina()
+{
+    while(!pagRecibidas->colavacia())
     {
-        Paquete* nuevo = new Paquete(pagina->getId(),pagina->getPeso(), pagina->getDestino(), pesoPaquete);
-        this->paquetes->add(nuevo);
-        pesoRestante -= pesoPaquete;
+        Pagina* pagina = pagRecibidas->tope();
+
+        int numPaquetes = 1 + rand() % 10;              //Numero aleatorio de paquetes entre 1 y 30
+        int pesoRestante = pagina->getPeso();           //Peso de la pagina a desarmar: el peso total de todos los paquetes juntos
+        int pesoPaquete = pesoRestante / numPaquetes;   //Peso de cada paquete
+
+        while(pesoRestante > pesoPaquete)
+        {
+            Paquete* nuevo = new Paquete(pagina->getId(),pagina->getPeso(), pagina->getDestino(), pesoPaquete);
+            this->paquetes->add(nuevo);             //Agrega los paquetes de la pagina a la lista de paquetes del Router
+            pesoRestante -= pesoPaquete;
+        }
+
+        pagRecibidas->desencolar();
+
+        if(pesoRestante != 0)
+        {
+            Paquete* nuevo = new Paquete(pagina->getId(), pagina->getPeso(), pagina->getDestino(), pesoRestante);
+            this->paquetes->add(nuevo);             //Ultimo paquete de menor tamaño para
+        }
     }
-
-    delete pagina;
-
-    Paquete* nuevo = new Paquete(pagina->getId(), pagina->getPeso(), pagina->getDestino(), pesoRestante);
-    this->paquetes->add(nuevo);
 }
 
 

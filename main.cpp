@@ -6,16 +6,27 @@ using namespace  std;
 
 int main() {
 
-    //string path = rutaActual();
-
-
-
-    cout << "hola mundo: " << endl;
-
 
     Administrador* admin = new Administrador();
-    admin->leerArchivo();
+    //admin->leerArchivo();
 
+
+    admin->addRouter(1);
+    admin->addRouter(2);
+    admin->addRouter(3);
+    admin->addTerminal(1,1);
+    admin->addTerminal(2, 1);
+    admin->addTerminal(3, 1);
+
+    admin->generarPaginas(1);
+
+    IP dest = {2, 1};
+    Pagina* nueva = new Pagina(50, dest);
+    admin->getRouter(1)->pagRecibidas->add(nueva);
+
+    admin->getRouter(1)->desarmarPagina();
+
+    cout << "hola mundo: " << endl;
 
 /*
     admin->insertarRouter(1);

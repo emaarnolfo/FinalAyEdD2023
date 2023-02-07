@@ -1,4 +1,4 @@
-//  Pila con Lista.cpp
+
 
 #ifndef FINALAYEDD2023_LISTAS_H
 #define FINALAYEDD2023_LISTAS_H
@@ -14,8 +14,9 @@ private:
     T* dato;
     Nodo* next;
 public:
-    Nodo() { next = nullptr; };
-    Nodo(T* a) { dato = a; next = nullptr; };
+    Nodo() { next = NULL; };
+    Nodo(T* a) { dato = a; next = NULL; };
+    //~Nodo();
     void set_next(Nodo* n) { next = n; };
     T* get_dato() { return dato; };
     Nodo* get_next() { return next; };
@@ -51,6 +52,7 @@ public:
     };
     T* last();                           //retorna el ultimo nodo de la lista
 };
+
 
 template <class T> class Pila:public Lista<T>{
 public:
@@ -95,7 +97,7 @@ T* Lista<T>::last()
 template <class T>
 void Lista<T>::add(T* d) //100
 {
-    auto nuevo = new Nodo<T>(d);
+    Nodo<T>* nuevo = new Nodo<T>(d);
     nuevo->set_next(czo);
     czo = nuevo;
 }
@@ -140,7 +142,7 @@ template <class T> void Lista<T>::borrar_last()
 { // borra el ultimo nodo
     if (!this->esvacia()) {
         if ((czo->get_next())->get_next() == NULL) {
-            delete czo->get_next();
+            delete czo;
             czo->set_next(NULL);
         }
         else this->resto()->borrar_last();
