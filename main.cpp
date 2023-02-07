@@ -1,21 +1,23 @@
 #include <iostream>
 #include "headers/Administrador.h"
-#include "headers/LeerArchivo.h"
+
 
 using namespace  std;
 
 int main() {
 
-  //  string path = rutaActual();
+    //string path = rutaActual();
 
-//    cout <<endl << path <<endl;
 
-    leerArchivo();
 
-    /*
+    cout << "hola mundo: " << endl;
+
+
     Administrador* admin = new Administrador();
+    admin->leerArchivo();
 
 
+/*
     admin->insertarRouter(1);
     admin->insertarRouter(2);
     admin->insertarRouter(3);

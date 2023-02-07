@@ -11,14 +11,24 @@
 #include <algorithm>
 #include "Color.h"
 #include "Terminal.h"
+#include <iostream>
+#include <unistd.h>
+#include <string.h>
+#include <cstring>
+
 
 using namespace std;
 
 class Administrador {
+private:
+    char* rutaActual();
+    int routers;
+    int matriz[10][10];
+
+public:
     Router* primero;
     int tamanio;
 
-public:
     Administrador();
     bool esVacio();
     Router* getRouter(short int IP);        //Obtiene el Router del IP especificado
@@ -27,6 +37,7 @@ public:
     void insertarArista(short int IPorigen, short int IPdestino, int ancho_de_banda);   //Inserta una Arista(conexion entre Routers) con el ancho de banda especificado
     void mostrarListaAdyacencia();          //Muestra lista de adyacencia de toda la red construida
     void Dijkstra(short int IPorigen, short int IPdestino);     //Despliega las rutas mas cortas entre los vertices
+    void leerArchivo();
 
 
 };
