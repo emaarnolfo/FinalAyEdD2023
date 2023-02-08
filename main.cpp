@@ -19,12 +19,16 @@ int main() {
     admin->addTerminal(3, 1);
 
     admin->generarPaginas(1);
-
-    IP dest = {2, 1};
+    /*
+    IP dest = {1, 1};
     Pagina* nueva = new Pagina(50, dest);
     admin->getRouter(1)->pagRecibidas->add(nueva);
 
     admin->getRouter(1)->desarmarPagina();
+    admin->getRouter(1)->ordenarPaq();
+    */
+    admin->generarPaginas(2);
+    admin->getRouter(1)->armarPaginas();
 
     cout << "hola mundo: " << endl;
 

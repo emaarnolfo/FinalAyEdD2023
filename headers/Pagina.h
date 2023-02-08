@@ -26,7 +26,9 @@ public:
     int getId() { return id; }
     int getPeso() { return peso; }
     IP getDestino() { return destino; }
+    int getCont() { return contPaginas; };
     void setID(int id) { this->id = id; };
+    void setContador(int cont) { contPaginas = cont; };
 };
 
 

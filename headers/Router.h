@@ -17,6 +17,10 @@ class Terminal;
 class Router {
 private:
     void borrarPaquetes(int idPag, Nodo<Paquete>* ant, Lista<Paquete>* lista);
+    void crearPaquetes(Pagina* pagina);
+    void borrarPaq(int idPag, Lista<Paquete>* lista){
+        this->borrarPaquetes(idPag, nullptr, lista);
+    };
 
 public:
     uint8_t IP;
@@ -29,14 +33,13 @@ public:
     Lista<Paquete>* paquetes = new Lista<Paquete>();                //Paquetes listos para enviar al siguiente Router de acuerdo a su camino
     Lista<Paquete>* paqEnDestino = new Lista<Paquete>();            //Lista de Paquetes en el Router destino, en espera para armar la Pagina
 
-
     friend class Arista;
 
     Router(uint8_t IP);
     void agregarTerminal(Terminal* terminal);
-    void desarmarPagina();
+    void desarmarPagina();                      //Se puede implementar con paquetes aleatorios
     void armarPaginas();
-    void borrarPaq(int idPag, Lista<Paquete>* lista) { this->borrarPaquetes(idPag, nullptr, lista); };
+    void ordenarPaq();                          //Los paquetes que se encuentran en el router destino pasan a la lista de paqEnDestino
 };
 
 #endif //FINALAYEDD_ROUTER_H

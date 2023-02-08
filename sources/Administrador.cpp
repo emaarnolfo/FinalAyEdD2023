@@ -33,13 +33,9 @@ void Administrador::addRouter(uint8_t IP)
 {
     Router* nuevo = new Router(IP);
 
-
-    if(esVacio())
-    {
+    if(esVacio()){
         routerCzo = nuevo;
-    }
-    else
-    {
+    } else {
         Router* aux = routerCzo;
 
         while(aux->next != NULL)
@@ -62,7 +58,6 @@ void Administrador::addTerminal(uint8_t ipRouter, uint8_t ipTerminal)
         nroTerminales++;
     } else {
         cout << "No se puede agregar la terminal, no ha encontrado el Router especificado" << endl;
-
     }
 }
 

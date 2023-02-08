@@ -28,7 +28,6 @@ private:
 public:
     Router* routerCzo;
     Lista<Terminal>* terminales = new Lista<Terminal>();
-    Terminal* terminalCzo;
     int nroRouters;
     int nroTerminales;
 

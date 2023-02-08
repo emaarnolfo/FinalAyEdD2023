@@ -16,14 +16,13 @@ public:
     //Constructor
     Paquete(int idPag, int peso, const IP destino, int pesoPaq) : Pagina(peso, destino), peso_paq(pesoPaq){
         this->setID(idPag);
-        ID_paq = contPaquetes ++;
+        ID_paq = contPaquetes++;
+        this->setContador(getCont()-1);
     }
 
     //Getters
     int getIdpaq() { return ID_paq; }
     int getPesoPaq() { return peso_paq; }
-
-
 };
 
 #endif //FINALAYEDD2023_PAQUETE_H
