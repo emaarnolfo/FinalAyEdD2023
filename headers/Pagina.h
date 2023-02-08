@@ -31,6 +31,4 @@ public:
     void setContador(int cont) { contPaginas = cont; };
 };
 
-
-
 #endif //FINALAYEDD2023_PAGINA_H

@@ -58,15 +58,18 @@ void Router::borrarPaquetes(int idPag, Nodo<Paquete>* ant, Lista<Paquete>* paque
     {
         if(paquetes->cabeza()->getId() == idPag)
         {
-            if(ant == nullptr)
+            if(ant == nullptr) {
                 paquetes->borrar();
+                borrarPaquetes(idPag, nullptr, paquetes);
+            }
             else {
                 ant->set_next(paquetes->getCzo()->get_next());
                 delete paquetes->cabeza();
-                borrarPaquetes(idPag, paqEnDestino->getCzo(), paquetes->resto());
+                borrarPaquetes(idPag, paquetes->getCzo(), paquetes->resto());
             }
         }
-        borrarPaquetes(idPag, paqEnDestino->getCzo(), paquetes->resto());
+        if(!paquetes->esvacia())
+            borrarPaquetes(idPag, paquetes->getCzo(), paquetes->resto());
     }
 }
 
@@ -94,6 +97,9 @@ void Router::armarPaginas()
                 pagListas->add(nueva);
                 borrarPaq(nueva->getId(), paqEnDestino);
             }
+            if(paqEnDestino->esvacia())
+                break;
+
             i = i->resto();
         }
     }
@@ -118,5 +124,74 @@ void Router::ordenarPaq()
         } else {
             i = i->resto();
         }
+    }
+}
+
+Router* Router::getRoutVec(uint8_t ipRouter, Lista<Router>* r_vecinos)
+{
+    if(!r_vecinos->esvacia()){
+        if (r_vecinos->cabeza()->IP == ipRouter)
+            return r_vecinos->cabeza();
+        else
+            return getRoutVec(ipRouter, r_vecinos->resto());
+    }
+
+    cout << "No se encontro el Router Vecino especificado " << endl;
+    return nullptr;
+}
+
+/*
+ * Cada paquete pregunta en sigRouter cual es el proximo Router al que tiene que ir
+ * para llegar al destino del paquete.
+ * Una vez encontrado el paquete lo agrega a la cola de paquetes
+ * del Router que corresponde segun el destino del dato
+ */
+void Router::enviarPaquetes()
+{
+    Lista<Paquete>* i = paquetes;
+
+    while(!i->esvacia())
+    {
+        Paquete* aux = i->cabeza();
+        uint8_t r_destino = aux->getDestino().ipRouter;
+        Router* r_siguiente = sigRouter[r_destino];
+
+        r_siguiente->paquetes->add(aux);
+
+        i->borrar();
+
+        //i = i->resto();
+    }
+}
+
+Terminal* Router::getTerminal(uint8_t ipTerminal)
+{
+    Lista<Terminal>* i = listaTerminales;
+
+    while(!i->esvacia())
+    {
+        if(i->cabeza()->getIpTerminal() == ipTerminal)
+            return i->cabeza();
+
+        i = i->resto();
+    }
+
+    cout << "No se entontro la pagina pedida " << endl;
+    return nullptr;
+}
+
+/*
+ *
+ */
+void Router::enviarPaginas()
+{
+    while(!pagListas->colavacia())
+    {
+        Pagina* aux = pagListas->tope();
+        uint8_t destino = aux->getDestino().ipTerminal;
+
+        getTerminal(destino)->addPagina(aux);
+
+        pagListas->desencolar();
     }
 }

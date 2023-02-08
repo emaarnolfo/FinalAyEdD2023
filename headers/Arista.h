@@ -20,5 +20,4 @@ public:
     Arista(int ancho_de_banda, Router* destino);
 };
 
-
 #endif //FINALAYEDD_ARISTA_H

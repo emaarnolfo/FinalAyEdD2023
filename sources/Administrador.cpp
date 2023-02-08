@@ -52,18 +52,23 @@ void Administrador::addTerminal(uint8_t ipRouter, uint8_t ipTerminal)
     Router* router = this->getRouter(ipRouter);
 
     if(router != NULL) {
-        Terminal* nuevo = new Terminal(ipTerminal, ipRouter);
+        Terminal* nuevo = new Terminal(ipTerminal, router);
         this->terminales->add(nuevo);
         router->agregarTerminal(nuevo);
         nroTerminales++;
     } else {
-        cout << "No se puede agregar la terminal, no ha encontrado el Router especificado" << endl;
+        cout << "No se puede agregar la terminal, no se ha encontrado el Router especificado" << endl;
     }
 }
 
+/*
+ * Genera la cantidad de paginas que se le pasan por parametro.
+ * Las paginas se generan en terminales aleatorias que se
+ * obtienen de la lista de terminales
+ */
+
 void Administrador::generarPaginas(int nroPaginas)
 {
-
     for(int i = 0; i < nroPaginas; i++) {
         int index = 1 + rand() % terminales->size();
         Terminal *terminal = terminales->get(index);
@@ -71,7 +76,7 @@ void Administrador::generarPaginas(int nroPaginas)
     }
 }
 
-void Administrador::insertarArista(short IPorigen, short IPdestino, int ancho_de_banda)
+void Administrador::addArista(uint8_t IPorigen, uint8_t IPdestino, int ancho_de_banda)
 {
     Router* router_origen = getRouter(IPorigen);
     Router* router_destino = getRouter(IPdestino);
@@ -79,6 +84,7 @@ void Administrador::insertarArista(short IPorigen, short IPdestino, int ancho_de
     if(router_destino != NULL && router_origen != NULL)
     {
         Arista* nuevo = new Arista(ancho_de_banda, router_destino);
+        router_origen->routersVecinos->add(router_destino);
 
         if(router_origen->arista == NULL)
             router_origen->arista = nuevo;
@@ -125,10 +131,9 @@ bool costoMinimo(const pair<Router*, int>& a, const pair<Router*, int>& b)
     return a.second < b.second;
 }
 
-void Administrador::Dijkstra(short IPorigen, short IPdestino)
+void Administrador::Dijkstra(short IPorigen)
 {
     Router* r_origen = getRouter(IPorigen);
-    Router* r_destino = getRouter(IPdestino);
 
     if(r_origen == NULL)
         cout << "El vertice origen no existe" <<endl;
@@ -137,7 +142,7 @@ void Administrador::Dijkstra(short IPorigen, short IPdestino)
         map<Router*, map<Router*, int>> matriz;
         map<Router*, bool> visitados;           //Par ordenado con los Routers de la red y su booleano que indica si fue visitado
         map<Router*, Router*> rutas;            //Ruta que va desde el origen ingresado hacia cada Router de la red
-        map<Router*, int> cola;                 //Se puede implementar con Lista y agregar ordenado
+        map<Router*, int> cola;                 //Cola de prioridad
         //Cola<Router*>* cola2;                 //Cola que indica los siguientes nodos a visitar
         map<Router*, int> distancias;           //Distancia desde el router origen ingresado hacia cada Router
 
@@ -180,13 +185,6 @@ void Administrador::Dijkstra(short IPorigen, short IPdestino)
         {
             map<Router*, int>::iterator iter = min_element(cola.begin(), cola.end(), costoMinimo);
 
-            /*
-             * Verificar si el destino ha sido alcanzado y corta
-             */
-            if (iter->first->IP == r_destino->IP) {
-                cout << "Se llego al destino" << endl;
-                break;
-            }
 
             //Router* r_iter = cola2->tope();
 
@@ -214,7 +212,7 @@ void Administrador::Dijkstra(short IPorigen, short IPdestino)
 
         //Muestra los vertices destino con su respectivo peso total
         for(map<Router*, int>::iterator i = distancias.begin(); i != distancias.end(); i++)
-            cout << i->first->IP <<": " << i->second << endl;
+            //printf("%d: %d\n",i->first->IP, i->second);
 
 
         //Muestra las rutas completas
@@ -224,11 +222,16 @@ void Administrador::Dijkstra(short IPorigen, short IPdestino)
 
             while(rActual != NULL)
             {
-                cout << rActual->IP << " <- ";
+                if(rutas[rActual] == r_origen){
+                    //cout<<"(primero) ";
+                    r_origen->sigRouter[i->first->IP] = rActual;
+                }
+
+                //printf("%d <- ", rActual->IP);
                 rActual = rutas[rActual];
             }
 
-            cout << endl;
+            //cout << endl;
         }
 
     }

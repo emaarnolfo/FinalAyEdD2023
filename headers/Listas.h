@@ -19,6 +19,7 @@ public:
     //~Nodo();
     void set_next(Nodo* n) { next = n; };
     T* get_dato() { return dato; };
+    void set_dato(T* d) { dato = d; };
     Nodo* get_next() { return next; };
     bool es_vacio() { return next == NULL; }
 };
@@ -142,8 +143,9 @@ template <class T> void Lista<T>::borrar_last()
 { // borra el ultimo nodo
     if (!this->esvacia()) {
         if ((czo->get_next())->get_next() == NULL) {
-            delete czo;
-            czo->set_next(NULL);
+            Nodo<T>* tmp = czo;
+            czo = czo->get_next();
+            delete tmp;
         }
         else this->resto()->borrar_last();
     }

@@ -1,62 +1,78 @@
 #include <iostream>
 #include "headers/Administrador.h"
 
-
 using namespace  std;
 
 int main() {
 
-
     Administrador* admin = new Administrador();
     //admin->leerArchivo();
-
 
     admin->addRouter(1);
     admin->addRouter(2);
     admin->addRouter(3);
+
+    admin->addArista(1,2,10);
+    admin->addArista(1,3,50);
+    admin->addArista(2,1,50);
+    admin->addArista(2,3,50);
+    admin->addArista(3,1,50);
+    admin->addArista(3,2,50);
+
     admin->addTerminal(1,1);
     admin->addTerminal(2, 1);
     admin->addTerminal(3, 1);
 
     admin->generarPaginas(1);
-    /*
-    IP dest = {1, 1};
+
+    IP dest = {2, 1};
     Pagina* nueva = new Pagina(50, dest);
-    admin->getRouter(1)->pagRecibidas->add(nueva);
+    admin->getRouter(1)->getTerminal(1)->pagPendiendes->encolar(nueva);
+
+    //Se envian todas las paginas que las terminales tengan pendientes
+    for(int i = 1; i <= admin->nroTerminales; i++)
+        admin->terminales->get(i)->enviarPaginas();
+
 
     admin->getRouter(1)->desarmarPagina();
-    admin->getRouter(1)->ordenarPaq();
-    */
-    admin->generarPaginas(2);
-    admin->getRouter(1)->armarPaginas();
+    //admin->getRouter(1)->ordenarPaq();
+
+    //admin->generarPaginas(2);
+    //admin->getRouter(1)->armarPaginas();
+
+    admin->Dijkstra(1);
+    admin->getRouter(1)->enviarPaquetes();
+    admin->getRouter(2)->ordenarPaq();
+    admin->getRouter(2)->armarPaginas();
+    admin->getRouter(2)->enviarPaginas();
 
     cout << "hola mundo: " << endl;
 
 /*
-    admin->insertarRouter(1);
-    admin->insertarRouter(2);
-    admin->insertarRouter(3);
-    admin->insertarRouter(4);
-    admin->insertarRouter(5);
-    admin->insertarRouter(6);
-    admin->insertarRouter(7);
+    admin->addRouter(1);
+    admin->addRouter(2);
+    admin->addRouter(3);
+    admin->addRouter(4);
+    admin->addRouter(5);
+    admin->addRouter(6);
+    admin->addRouter(7);
 
-    admin->insertarArista(1,4,8);
-    admin->insertarArista(2,3,17);
-    admin->insertarArista(2,4,83);
-    admin->insertarArista(2,6,97);
-    admin->insertarArista(2,7,60);
-    admin->insertarArista(3,1,4);
-    admin->insertarArista(4,2,97);
-    admin->insertarArista(4,3,37);
-    admin->insertarArista(4,5,41);
-    admin->insertarArista(4,7,64);
-    admin->insertarArista(5,2,8);
-    admin->insertarArista(5,6,92);
-    admin->insertarArista(6,1,12);
-    admin->insertarArista(6,2,8);
-    admin->insertarArista(6,5,42);
-    admin->insertarArista(7,4,17);
+    admin->addArista(1,4,8);
+    admin->addArista(2,3,17);
+    admin->addArista(2,4,83);
+    admin->addArista(2,6,97);
+    admin->addArista(2,7,60);
+    admin->addArista(3,1,4);
+    admin->addArista(4,2,97);
+    admin->addArista(4,3,37);
+    admin->addArista(4,5,41);
+    admin->addArista(4,7,64);
+    admin->addArista(5,2,8);
+    admin->addArista(5,6,92);
+    admin->addArista(6,1,12);
+    admin->addArista(6,2,8);
+    admin->addArista(6,5,42);
+    admin->addArista(7,4,17);
 
     //admin->mostrarListaAdyacencia();
 
@@ -86,7 +102,7 @@ int main() {
                 cout << "Ingrese el IP del Router: ";
                 cin >> IP;
 
-                admin->insertarRouter(IP);
+                admin->addRouter(IP);
 
                 break;
             }
@@ -105,9 +121,8 @@ int main() {
                     cout << "Ingrese el precio: ";
                     cin >> ancho_de_banda;
 
-                    admin->insertarArista(IPorigen,IPdestino, ancho_de_banda);
+                    admin->addArista(IPorigen,IPdestino, ancho_de_banda);
                 }
-
                 break;
             }
             case 3:
@@ -121,7 +136,6 @@ int main() {
                     cout << "El grafo esta vacio" << endl;
                 else
                     admin->mostrarListaAdyacencia();
-
                 break;
             }
             case 13:
@@ -134,15 +148,11 @@ int main() {
                     short int ipDestino;
                     cout << "Ingrese el nombre del vertice origen: ";
                     cin >> IPorigen;
-                    cout << "Ingrese el nombre del vertice destino: ";
-                    cin >> ipDestino;
 
-                    admin->Dijkstra(IPorigen, ipDestino);
+                    admin->Dijkstra(IPorigen);
                 }
-
                 break;
             }
-
             case 16:
             {
                 return 0;
@@ -150,13 +160,6 @@ int main() {
         }
         cin.get();
         cin.get();
-    }
-
-     */
-
+    }*/
     return 0;
 }
-
-
-
-

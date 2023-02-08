@@ -38,11 +38,10 @@ public:
     void addTerminal(uint8_t ipRouter, uint8_t ipTerminal);
     void generarPaginas(int nroPaginas);
     int getTamanio(){ return nroRouters; };
-    void insertarArista(short int IPorigen, short int IPdestino, int ancho_de_banda);   //Inserta una Arista(conexion entre Routers) con el ancho de banda especificado
+    void addArista(uint8_t IPorigen, uint8_t IPdestino, int ancho_de_banda);   //Inserta una Arista(conexion entre Routers) con el ancho de banda especificado
     void mostrarListaAdyacencia();          //Muestra lista de adyacencia de toda la red construida
-    void Dijkstra(short int IPorigen, short int IPdestino);     //Despliega las rutas mas cortas entre los vertices
+    void Dijkstra(short int IPorigen);     //Despliega las rutas mas cortas entre los vertices
     void leerArchivo();
-
 
 };
 

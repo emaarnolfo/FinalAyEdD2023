@@ -7,13 +7,11 @@
 using namespace std;
 
 //CONSTRUCTOR de Terminal
-Terminal::Terminal(std::uint8_t  ipTerminal, std::uint8_t  ipRouter)
+Terminal::Terminal(std::uint8_t  ipTerminal, Router* router)
 {
-    this->ipRouter = ipRouter;
+    this->ipRouter = router->IP;
     this->ipTerminal = ipTerminal;
-
-    this->pagRecibidas = new Cola<Pagina>();
-    this->pagPendiendes = new Cola<Pagina>();
+    this->routerPadre = router;
 
     IP* nvoTerminal = new IP{ipRouter, ipTerminal};
     tabla->add(nvoTerminal);
@@ -33,7 +31,17 @@ void Terminal::generarPagina()
 
     Pagina* nuevaPag = new Pagina(peso, destino);
 
-    delete destAux;
+    //delete destAux;
 
     pagPendiendes->encolar(nuevaPag);
+}
+
+void Terminal::enviarPaginas()
+{
+    while(!pagPendiendes->colavacia())
+    {
+        Pagina *aux = pagPendiendes->tope();
+        getRouter()->pagRecibidas->encolar(aux);
+        pagPendiendes->desencolar();
+    }
 }
