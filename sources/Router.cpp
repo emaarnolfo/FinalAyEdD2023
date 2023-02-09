@@ -42,7 +42,7 @@ void Router::crearPaquetes(Pagina *pagina)
     }
 }
 
-void Router::desarmarPagina()
+void Router::desarmarPaginas()
 {
     while(!pagRecibidas->colavacia())
     {
@@ -111,7 +111,7 @@ void Router::armarPaginas()
  * y se pasan a la lista de 'paqEnDestino' la cual se utiliza luego para armar la
  * pagina una vez que se encuentran todos los paquetes de la misma
  */
-void Router::ordenarPaq()
+void Router::ordenarPaquetes()
 {
     Lista<Paquete>* i = paquetes;
 

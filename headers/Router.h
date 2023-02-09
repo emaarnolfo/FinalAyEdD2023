@@ -28,7 +28,6 @@ private:
 
 public:
     uint8_t IP;
-    Router* next;
     Arista* arista;
 
     Lista<Router>* routersVecinos = new Lista<Router>();
@@ -39,13 +38,15 @@ public:
     Lista<Paquete>* paqEnDestino = new Lista<Paquete>();            //Lista de Paquetes en el Router destino, en espera para armar la Pagina
     map<int, Router*> sigRouter;                                    //Indica a que Router enviar los paquetes segun su destino
 
+    Router* next;
+
     friend class Arista;
 
     Router(uint8_t IP);
     void agregarTerminal(Terminal* terminal);
-    void desarmarPagina();                      //Se puede implementar con paquetes aleatorios
+    void desarmarPaginas();                   //Se puede implementar con paquetes aleatorios
+    void ordenarPaquetes();                   //Los paquetes que se encuentran en el router destino pasan a la lista de paqEnDestino
     void armarPaginas();
-    void ordenarPaq();                          //Los paquetes que se encuentran en el router destino pasan a la lista de paqEnDestino
     void enviarPaquetes();
     void enviarPaginas();
 

@@ -16,24 +16,25 @@
 #include <string.h>
 #include <cstring>
 
+#define MAX_ROUTERS 255
 
 using namespace std;
 
 class Administrador {
 private:
     char* rutaActual();
-    int routers;
-    int matriz[10][10];
+    int routers = 255;
+    int matriz[MAX_ROUTERS][MAX_ROUTERS];
 
 public:
     Router* routerCzo;
     Lista<Terminal>* terminales = new Lista<Terminal>();
-    int nroRouters;
+    uint8_t nroRouters;
     int nroTerminales;
 
     Administrador();
     bool esVacio();
-    void addRouter(uint8_t ipRouter);      //Inserta un Router en la red
+    void addRouter();      //Inserta un Router en la red
     Router* getRouter(uint8_t ipRouter);        //Obtiene el Router del IP especificado
     void addTerminal(uint8_t ipRouter, uint8_t ipTerminal);
     void generarPaginas(int nroPaginas);

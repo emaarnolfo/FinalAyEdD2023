@@ -12,8 +12,8 @@ class Router;
 class Arista {
 public:
     int ancho_de_banda;
-    Arista* next;
     Router* destino;
+    Arista* next;
 
     friend class Router;
 

@@ -29,20 +29,22 @@ Router* Administrador::getRouter(uint8_t IP) {
     return NULL;
 }
 
-void Administrador::addRouter(uint8_t IP)
+void Administrador::addRouter()
 {
-    Router* nuevo = new Router(IP);
+    if(nroRouters != numeric_limits<uint8_t>::max())
+    {
+        Router *nuevo = new Router(++nroRouters);
 
-    if(esVacio()){
-        routerCzo = nuevo;
-    } else {
-        Router* aux = routerCzo;
+        if (esVacio()) {
+            routerCzo = nuevo;
+        } else {
+            Router *aux = routerCzo;
 
-        while(aux->next != NULL)
-            aux = aux->next;
+            while (aux->next != NULL)
+                aux = aux->next;
 
-        aux->next = nuevo;
-        nroRouters++;
+            aux->next = nuevo;
+        }
     }
 }
 
@@ -273,11 +275,17 @@ void Administrador::leerArchivo()
     // Leer la cantidad de routers
     fscanf(fp, "Routers: %d\n", &routers);
     printf("Cantidad de routers: %d\n", routers);
+    for (int i = 0; i < routers; ++i) {
+        addRouter();
+        cout << "Se agrega router " << i+1 << endl;
+    }
+
 
     // Saltar la línea "MatrizDeAdyacencia:"
     char buffer[100];
     fgets(buffer, 100, fp);
 
+    //int matriz[routers+1][routers+1];
     // Leer las siguientes líneas
     for (int i = 0; i <= routers; i++) {
         for (int j = 0; j <= routers; j++) {
@@ -286,11 +294,24 @@ void Administrador::leerArchivo()
         fgets(buffer, 100, fp);
     }
 
-    // Imprimir la matriz
-    printf("Matriz de adyacencia:\n");
-    for (int i = 0; i <= routers; i++) {
-        for (int j = 0; j <= routers; j++) {
-            printf("%d\t", matriz[i][j]);
+    char line[100];
+    while (fgets(line, sizeof(line), fp) != NULL) {
+        int ipRouter = atoi(&line[0]);
+        int numTerminals = atoi(&line[2]);
+        for (int i = 1; i <= numTerminals; i++) {
+            printf("Se crea terminal %d en Router %d\n", i, ipRouter);
+            addTerminal(ipRouter, i);
+        }
+    }
+
+    // Insertar las aristas
+    printf("Aristas y anchos de banda:\n");
+    for (int i = 1; i <= routers; i++) {
+        for (int j = 1; j <= routers; j++) {
+            if(matriz[i][j] != 0) {
+                this->addArista(i, j, matriz[i][j]);
+                printf("%d -> %d -> %d  -  ", i, matriz[i][j], j);
+            }
         }
         printf("\n");
     }

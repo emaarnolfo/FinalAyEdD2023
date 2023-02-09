@@ -6,8 +6,10 @@ using namespace  std;
 int main() {
 
     Administrador* admin = new Administrador();
-    //admin->leerArchivo();
+    admin->leerArchivo();
 
+    cout << endl;
+/*
     admin->addRouter(1);
     admin->addRouter(2);
     admin->addRouter(3);
@@ -35,14 +37,14 @@ int main() {
 
 
     admin->getRouter(1)->desarmarPagina();
-    //admin->getRouter(1)->ordenarPaq();
+    //admin->getRouter(1)->ordenarPaquetes();
 
     //admin->generarPaginas(2);
     //admin->getRouter(1)->armarPaginas();
 
     admin->Dijkstra(1);
     admin->getRouter(1)->enviarPaquetes();
-    admin->getRouter(2)->ordenarPaq();
+    admin->getRouter(2)->ordenarPaquetes();
     admin->getRouter(2)->armarPaginas();
     admin->getRouter(2)->enviarPaginas();
 
