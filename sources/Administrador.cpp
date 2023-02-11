@@ -168,9 +168,10 @@ void Administrador::Dijkstra(short IPorigen)
 
             Arista* aj = ri ->arista;
 
+            //Se carga la matriz con los pesos de los ancho de banda
             while(aj != NULL)
             {
-                matriz[ri][aj->destino] = aj->ancho_de_banda;
+                matriz[ri][aj->destino] = aj->peso;
                 aj = aj->next;
             }
             ri = ri->next;
@@ -226,16 +227,14 @@ void Administrador::Dijkstra(short IPorigen)
             {
                 if(rutas[rActual] == r_origen){
                     //cout<<"(primero) ";
-                    r_origen->sigRouter[i->first->IP] = rActual;
+                    r_origen->tablaEnrutamiento[i->first->IP] = rActual;
                 }
 
                 //printf("%d <- ", rActual->IP);
                 rActual = rutas[rActual];
             }
-
             //cout << endl;
         }
-
     }
 }
 
@@ -318,3 +317,39 @@ void Administrador::leerArchivo()
 
     fclose(fp);
 }
+
+void Administrador::enviarPaginas()
+{
+    Lista<Terminal>* i = terminales;
+
+    while (!i->esvacia())
+    {
+        i->cabeza()->enviarPaginas();
+        i = i->resto();
+    }
+}
+
+
+void Administrador::ciclo()
+{
+    //Dijkstra: Calcula los caminos desde todos los nodos hacia todos los nodos
+    for(int i=0; i<nroRouters; i++)
+        Dijkstra(i+1);
+
+    //Desarma las paginas que se encuentran en los Routers
+    for(int i=0; i<nroRouters; i++)
+        getRouter(i+1)->desarmarPaginas();
+
+    for(int i=0; i<nroRouters; i++)
+        getRouter(i+1)->ordenarPaquetes();
+
+    for(int i=0; i<nroRouters; i++)
+        getRouter(i+1)->enviarPaquetes();
+
+    for(int i=0; i<nroRouters; i++)
+        getRouter(i+1)->armarPaginas();
+
+    for(int i=0; i<nroRouters; i++)
+        getRouter(i+1)->enviarPaginas();
+}
+

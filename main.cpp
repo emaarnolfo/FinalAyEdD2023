@@ -8,6 +8,27 @@ int main() {
     Administrador* admin = new Administrador();
     admin->leerArchivo();
 
+    //Se generan paginas en las terminales
+    admin->generarPaginas(admin->nroTerminales);
+
+    //Se mandan las paginas de los terminales a los Routers correspondientes
+    admin->enviarPaginas();
+
+    admin->ciclo();
+
+
+
+
+    /*
+    for(int i= 0; i < admin->nroRouters; i++){
+
+        admin->getRouter(i+1)->desarmarPaginas();       //Las paginas generadas se transforman en paquetes que se agregan a la cola de paquetes
+        admin->getRouter(i+1)->ordenarPaquetes();       //Los paquetes que se encuentran en el Router desstino pasan a la lista de paquetes en destino
+        admin->getRouter(i+1)->enviarPaquetes();        //Se envian los paquetes al destino correspondiente segun la tabla de enrutamiento
+        admin->getRouter(i+1)->ordenarPaquetes();       //Se ordenan los paquetes nuevos que llegan desde los routers vecinos
+    }
+     */
+
     cout << endl;
 /*
     admin->addRouter(1);

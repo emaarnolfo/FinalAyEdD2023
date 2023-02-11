@@ -43,6 +43,8 @@ public:
     void mostrarListaAdyacencia();          //Muestra lista de adyacencia de toda la red construida
     void Dijkstra(short int IPorigen);     //Despliega las rutas mas cortas entre los vertices
     void leerArchivo();
+    void ciclo();
+    void enviarPaginas();
 
 };
 

@@ -12,12 +12,15 @@ class Router;
 class Arista {
 public:
     int ancho_de_banda;
+    int peso;               //Para calcular el camino mas corto con dijkstra sin tener en cuenta el trafico
+    int ciclos;             //Ciclos de demora debido al trafico
     Router* destino;
     Arista* next;
 
     friend class Router;
 
     Arista(int ancho_de_banda, Router* destino);
+    //void calcPeso() { peso = 1/ancho_de_banda; };
 };
 
 #endif //FINALAYEDD_ARISTA_H

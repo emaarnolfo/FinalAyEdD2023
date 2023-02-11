@@ -27,9 +27,9 @@ void Router::crearPaquetes(Pagina *pagina)
 {
     int pesoRestante = pagina->getPeso();           //Peso de la pagina a desarmar: el peso total de todos los paquetes juntos
 
-    while(pesoRestante >= 10)
+    while(pesoRestante >= 20)
     {
-        int pesoPaquete = 1 + rand() % 10;
+        int pesoPaquete = 1 + rand() % 20;
         Paquete* nuevo = new Paquete(pagina->getId(),pagina->getPeso(), pagina->getDestino(), pesoPaquete);
         this->paquetes->add(nuevo);             //Agrega los paquetes de la pagina a la lista de paquetes del Router
         pesoRestante -= pesoPaquete;
@@ -106,8 +106,8 @@ void Router::armarPaginas()
 }
 
 /*
- * Verifica si los paquetes que llegan al Router y se encuentran en la lista 'paquetes'
- * se encuentran en el router destino. Si es asi se quitan de la lista 'paquetes'
+ * Verifica si los paquetes que llegan al Router que se encuentran en la lista 'paquetes'
+ * llegaron a su Router destino. Si es asi se quitan de la lista 'paquetes'
  * y se pasan a la lista de 'paqEnDestino' la cual se utiliza luego para armar la
  * pagina una vez que se encuentran todos los paquetes de la misma
  */
@@ -117,12 +117,24 @@ void Router::ordenarPaquetes()
 
     while(!i->esvacia())
     {
-        if(paquetes->cabeza()->getDestino().ipRouter == this->IP){
-            Paquete* nuevo = paquetes->cabeza();
+        int r_destino = i->cabeza()->getDestino().ipRouter;
+        //El paquete se encuentra en su router destino
+        if(r_destino == this->IP)
+        {
+            Paquete* nuevo = i->cabeza();
             paqEnDestino->add(nuevo);
-            paquetes->borrar();
-        } else {
             i = i->resto();
+            paquetes->borrarDato(nuevo);
+        }
+        //El paquete no llego al Router destino, pasa a la cola de envios de su destino
+        else
+        {
+            Paquete* nuevo = i->cabeza();
+            if(colaEnvios[r_destino] == NULL)
+                colaEnvios[r_destino] = new Lista<Paquete>();
+            colaEnvios[r_destino]->add(nuevo);
+            i =  i->resto();
+            paquetes->borrarDato(nuevo);
         }
     }
 }
@@ -148,19 +160,19 @@ Router* Router::getRoutVec(uint8_t ipRouter, Lista<Router>* r_vecinos)
  */
 void Router::enviarPaquetes()
 {
-    Lista<Paquete>* i = paquetes;
-
-    while(!i->esvacia())
+    //Lista<Paquete>* i = paquetes;
+    for(map<int, Lista<Paquete>*>::iterator i = colaEnvios.begin(); i != colaEnvios.end(); i++)
     {
-        Paquete* aux = i->cabeza();
-        uint8_t r_destino = aux->getDestino().ipRouter;
-        Router* r_siguiente = sigRouter[r_destino];
+        int r_destino = i->first;
+        Lista<Paquete>* j = i->second;
 
-        r_siguiente->paquetes->add(aux);
-
-        i->borrar();
-
-        //i = i->resto();
+        while (!j->esvacia())
+        {
+            Paquete *aux = j->cabeza();
+            Router *r_siguiente = tablaEnrutamiento[r_destino];
+            r_siguiente->paquetes->add(aux);
+            j->borrar();
+        }
     }
 }
 

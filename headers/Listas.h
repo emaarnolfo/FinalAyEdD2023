@@ -27,7 +27,7 @@ public:
 template <class T> class Lista {
 private: Nodo<T>* czo;
     void addO(T d, Nodo<T>* ant);
-    void borrarD(T d, Nodo<T>* ant);
+
 public:
     Lista() { czo = new Nodo<T>(); };
     explicit Lista(Nodo<T>* n) { czo = n; };
@@ -41,11 +41,12 @@ public:
     T* get(int index);
     int size();                         //Devuele el tamaño de la lista
     bool esta(T d);                     // detecta si d esta en la lista
-    void borrarDato(T d){               //borra el nodo que contiene d
+    void borrarD(T* d, Nodo<T>* ant);
+    void borrarDato(T* d){               //borra el nodo que contiene d
         borrarD(d, NULL);
     }
     void borrar();                      //borra la cabeza de la lista
-    void borrar_last();                 //borra el ultimo nodo de la lista
+    void borrar_last(Nodo<T>* ant);     //borra el ultimo nodo de la lista
     void concat(Lista<T>* l1);          //Le transfiere los datos de l1 a this
     void tomar(int n);                  //deja "vivos" los n primeros nodos y borra el resto
     void addOrdenado(T d){              //sumar nodos a la lista Ordenados de menor a MAYOR
@@ -70,7 +71,7 @@ public:
     T* tope()                 { return this->last(); };
     bool colavacia()         { return this->esvacia(); };
     void encolar(T* a)        { this->add(a); };
-    void desencolar()        { this->borrar_last(); };
+    void desencolar()        { this->borrar_last(nullptr); };
     T* ultimo()               { return this->cabeza(); };
     //string imprimir(string s){ return this->toPrint(s); };
 };
@@ -139,15 +140,18 @@ template <class T> void Lista<T>::borrar()
     }
 }
 
-template <class T> void Lista<T>::borrar_last()
+template <class T> void Lista<T>::borrar_last(Nodo<T>* ant)
 { // borra el ultimo nodo
     if (!this->esvacia()) {
         if ((czo->get_next())->get_next() == NULL) {
-            Nodo<T>* tmp = czo;
-            czo = czo->get_next();
-            delete tmp;
+            if(ant == nullptr){
+                this->borrar();
+            }else{
+                ant->set_next(czo->get_next());
+                delete czo;
+            }
         }
-        else this->resto()->borrar_last();
+        else this->resto()->borrar_last(czo);
     }
 }
 
@@ -176,7 +180,7 @@ template <class T> bool Lista<T>::esta(T d)
 }
 
 template <class T>
-void Lista<T>::borrarD(T d, Nodo<T>* ant)
+void Lista<T>::borrarD(T* d, Nodo<T>* ant)
 {
     if (!this->esvacia()) {
         if (d == this->cabeza()) {

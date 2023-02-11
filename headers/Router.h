@@ -30,13 +30,14 @@ public:
     uint8_t IP;
     Arista* arista;
 
+    map<int, Lista<Paquete>*> colaEnvios;                           //Cola de envios para cada Router vecino
     Lista<Router>* routersVecinos = new Lista<Router>();
     Lista<Terminal>* listaTerminales = new Lista<Terminal>();       //Lista de todas las terminales conectadas al Router
     Cola<Pagina>* pagRecibidas = new Cola<Pagina>();                //Paginas que llegan desde las terminales. Las cuales se deben dividir en paquetes
     Cola<Pagina>* pagListas = new Cola<Pagina>();                   //Paginas listas para mandar a la terminal correspondiente
     Lista<Paquete>* paquetes = new Lista<Paquete>();                //Paquetes listos para enviar al siguiente Router de acuerdo a su camino
     Lista<Paquete>* paqEnDestino = new Lista<Paquete>();            //Lista de Paquetes en el Router destino, en espera para armar la Pagina
-    map<int, Router*> sigRouter;                                    //Indica a que Router enviar los paquetes segun su destino
+    map<int, Router*> tablaEnrutamiento;                            //Indica a que Router enviar los paquetes segun su destino
 
     Router* next;
 
