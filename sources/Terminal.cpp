@@ -45,3 +45,30 @@ void Terminal::enviarPaginas()
         pagPendiendes->desencolar();
     }
 }
+
+void Terminal::imprimirPaginas()
+{
+    Lista<Pagina>* i = (Lista<Pagina>*)pagPendiendes;
+
+    if(!pagPendiendes->esvacia()){
+        printf("Paginas listas generadas para mandar al Router %d \n", ipRouter);
+
+        while (!i->esvacia()) {
+            Pagina *aux = i->cabeza();
+            cout << "Pagina: " << aux->getId() << " peso: " << aux->getPeso() << " destino: ";
+            printf("%d.%d\n", aux->getDestino().ipTerminal, aux->getDestino().ipRouter);
+
+            i = i->resto();
+        }
+    }
+
+    if(!pagRecibidas->esvacia()){
+        i = (Lista<Pagina> *) pagRecibidas;
+
+        cout << "Paginas recibidas de otras terminales: " << endl;
+        while (!i->esvacia()) {
+            Pagina *aux = i->cabeza();
+            cout << "Pagina: " << aux->getId() << " peso: " << aux->getPeso() << endl;
+        }
+    }
+}

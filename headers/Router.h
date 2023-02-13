@@ -8,6 +8,7 @@
 #include <iostream>
 #include "Terminal.h"
 #include "Paquete.h"
+#include "Arista.h"
 #include <map>
 
 using namespace std;
@@ -50,6 +51,8 @@ public:
     void armarPaginas();
     void enviarPaquetes();
     void enviarPaginas();
+    void imprimirPaqs();
+    Arista* getArista(uint8_t ipDestino);
 
     //Pasar a privado
     Terminal* getTerminal(uint8_t ipTerminal);

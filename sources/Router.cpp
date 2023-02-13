@@ -165,13 +165,17 @@ void Router::enviarPaquetes()
     {
         int r_destino = i->first;
         Lista<Paquete>* j = i->second;
+        Arista* ari = getArista(r_destino);
+        int ancho = ari->ancho_de_banda * 100;
 
-        while (!j->esvacia())
+        Paquete *aux = j->cabeza();
+
+        while (!j->esvacia() || ancho < aux->getPesoPaq())
         {
-            Paquete *aux = j->cabeza();
             Router *r_siguiente = tablaEnrutamiento[r_destino];
             r_siguiente->paquetes->add(aux);
             j->borrar();
+            ancho -= aux->getPesoPaq();
         }
     }
 }
@@ -205,5 +209,49 @@ void Router::enviarPaginas()
         getTerminal(destino)->addPagina(aux);
 
         pagListas->desencolar();
+    }
+}
+
+Arista *Router::getArista(uint8_t ipDestino)
+{
+    Arista* aux = this->arista;
+
+    while(aux != nullptr)
+    {
+        if(aux->destino->IP == ipDestino)
+            return aux;
+
+        aux = aux->next;
+    }
+
+    cout << "No se encontro la Arista pedida " << endl;
+
+    return nullptr;
+}
+
+
+void Router::imprimirPaqs()
+{
+    int cant, idPag;
+
+    for(map<int, Lista<Paquete>*>::iterator i = colaEnvios.begin(); i != colaEnvios.end(); i++){
+
+        cant = 0;
+        Lista<Paquete>* cola = i->second;
+        idPag = cola->cabeza()->getId();
+
+        while(!cola->esvacia())
+        {
+            if(idPag != cola->cabeza()->getId())
+            {
+                printf("- %d paquetes de la pag %d con destino en Router %d\n", cant, idPag, i->first);
+                idPag = cola->cabeza()->getId();
+                cant = 0;
+            }
+            cant++;
+            cola = cola->resto();
+        }
+        if(cant != 0)
+            printf("- %d paquetes de la pag %d con destino en Router %d\n", cant, idPag, i->first);
     }
 }

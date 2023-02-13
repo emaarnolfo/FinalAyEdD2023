@@ -28,12 +28,15 @@ class Terminal {
 public:
     Cola<Pagina>* pagPendiendes = new Cola<Pagina>();   //Cola de las paginas que se generaron para enviar a los Routers
 
+
     Terminal(uint8_t  ipTerminal, Router* router);
     void generarPagina();
     uint8_t getIpTerminal() { return ipTerminal; };
+    uint8_t getIpRouter() { return ipRouter; };
     void addPagina(Pagina* pag) { pagRecibidas->encolar(pag); };
     Router* getRouter() { return routerPadre; };
     void enviarPaginas();
+    void imprimirPaginas();
 };
 
 #endif //FINALAYEDD2023_TERMINAL_H

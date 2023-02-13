@@ -353,3 +353,34 @@ void Administrador::ciclo()
         getRouter(i+1)->enviarPaginas();
 }
 
+void Administrador::imprimirPaginas()
+{
+    cout << "Impresion de " << RED << " tERMINALES" << RESET << endl;
+    Lista<Terminal>* i = terminales;
+
+    while(!i->esvacia())
+    {
+        Terminal* aux = i->cabeza();
+        cout <<endl << REVERSED;
+        printf("Terminal %d.%d", aux->getIpTerminal(), aux->getIpRouter());
+        cout << RESET << endl;
+
+        aux->imprimirPaginas();
+        i = i->resto();
+    }
+}
+
+void Administrador::imprimirPaquetes()
+{
+    cout << endl << endl << "Impresion de " << RED << " Paquetes" << RESET << endl;
+    Router* aux = routerCzo;
+
+    while(aux != nullptr){
+        cout << endl << REVERSED;
+        printf("Router %d:", aux->IP);
+        cout << RESET <<endl;
+        aux->imprimirPaqs();
+
+        aux = aux->next;
+    }
+}

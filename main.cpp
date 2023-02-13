@@ -11,10 +11,13 @@ int main() {
     //Se generan paginas en las terminales
     admin->generarPaginas(admin->nroTerminales);
 
-    //Se mandan las paginas de los terminales a los Routers correspondientes
-    admin->enviarPaginas();
+    admin->imprimirPaginas();
+    admin->imprimirPaquetes();
 
-    admin->ciclo();
+    //Se mandan las paginas de los terminales a los Routers correspondientes
+    //admin->enviarPaginas();
+
+    //admin->ciclo();
 
 
 
