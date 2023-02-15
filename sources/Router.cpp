@@ -31,17 +31,20 @@ void Router::crearPaquetes(Pagina *pagina)
     {
         int pesoPaquete = 1 + rand() % 20;
         Paquete* nuevo = new Paquete(pagina->getId(),pagina->getPeso(), pagina->getDestino(), pesoPaquete);
-        this->paquetes->add(nuevo);             //Agrega los paquetes de la pagina a la lista de paquetes del Router
+        this->paqNuevos->add(nuevo);             //Agrega los paquetes de la pagina a la lista de paquetes del Router
         pesoRestante -= pesoPaquete;
     }
 
     if(pesoRestante != 0)
     {
         Paquete* nuevo = new Paquete(pagina->getId(), pagina->getPeso(), pagina->getDestino(), pesoRestante);
-        this->paquetes->add(nuevo);             //Ultimo paquete de menor tamaño para
+        this->paqNuevos->add(nuevo);             //Ultimo paquete de menor tamaño para
     }
 }
 
+/*
+ * Desarma las paginas recibidas de las terminales y llama la funcion encargada de armar paquetes
+ */
 void Router::desarmarPaginas()
 {
     while(!pagRecibidas->colavacia())
@@ -52,6 +55,11 @@ void Router::desarmarPaginas()
     }
 }
 
+/*
+ * Funcion recursiva que borra paquetes de la lista que se pasa por parametro.
+ * Se buscan los paquetes que corresponden al id de Pagina que se especifica por parametro y
+ * dichos paquetes se borran de la lista
+ */
 void Router::borrarPaquetes(int idPag, Nodo<Paquete>* ant, Lista<Paquete>* paquetes)
 {
     if(!paquetes->esvacia())
@@ -73,6 +81,10 @@ void Router::borrarPaquetes(int idPag, Nodo<Paquete>* ant, Lista<Paquete>* paque
     }
 }
 
+/*
+ * Verifica que se encuentren todos los paquetes de una misma pagina en la lista de 'paqEnDestino'
+ * y arma la página con los datos correspondientes de la misma
+ */
 void Router::armarPaginas()
 {
     if(!paqEnDestino->esvacia()){           //Verifico que haya paquetes en el destino
@@ -96,6 +108,7 @@ void Router::armarPaginas()
                 Pagina* nueva = new Pagina(i->cabeza()->getId(), pesoTotal, i->cabeza()->getDestino());
                 pagListas->add(nueva);
                 borrarPaq(nueva->getId(), paqEnDestino);
+                i = paqEnDestino;
             }
             if(paqEnDestino->esvacia())
                 break;
@@ -106,35 +119,38 @@ void Router::armarPaginas()
 }
 
 /*
- * Verifica si los paquetes que llegan al Router que se encuentran en la lista 'paquetes'
- * llegaron a su Router destino. Si es asi se quitan de la lista 'paquetes'
- * y se pasan a la lista de 'paqEnDestino' la cual se utiliza luego para armar la
- * pagina una vez que se encuentran todos los paquetes de la misma
+ * Verifica el destino de cada paquete que llega al Router en la lista paqNuevos.
+ * Si el el destino del paquete es el del mismo Router, este se pasa a la lista de paqEnDestino
+ * para armar la pagina (sólo si se encuentra la totalidad de paquetes de la pagina).
+ * En cambio si el destino es otro Router, el paquete pasa a la cola de Envios de su respectivo destino.
+ * La lista 'paqNuevos' queda vacia para recibir los nuevos paquetes en el proximo turno
  */
 void Router::ordenarPaquetes()
 {
-    Lista<Paquete>* i = paquetes;
+    Lista<Paquete>* i = paqNuevos;
 
     while(!i->esvacia())
     {
         int r_destino = i->cabeza()->getDestino().ipRouter;
+        Paquete* nuevo = i->cabeza();
+
         //El paquete se encuentra en su router destino
         if(r_destino == this->IP)
         {
-            Paquete* nuevo = i->cabeza();
             paqEnDestino->add(nuevo);
             i = i->resto();
-            paquetes->borrarDato(nuevo);
+            paqNuevos->borrarDato(nuevo);
         }
-        //El paquete no llego al Router destino, pasa a la cola de envios de su destino
+
+        //El paquete no llego al Router destino, pasa a la cola de envios de su siguiente Router
         else
         {
-            Paquete* nuevo = i->cabeza();
-            if(colaEnvios[r_destino] == NULL)
-                colaEnvios[r_destino] = new Lista<Paquete>();
-            colaEnvios[r_destino]->add(nuevo);
+            int sigRouter = tablaEnrutamiento[r_destino]->IP;
+            if(colaEnvios[sigRouter] == NULL)
+                colaEnvios[sigRouter] = new Lista<Paquete>();
+            colaEnvios[sigRouter]->add(nuevo);
             i =  i->resto();
-            paquetes->borrarDato(nuevo);
+            paqNuevos->borrarDato(nuevo);
         }
     }
 }
@@ -150,66 +166,6 @@ Router* Router::getRoutVec(uint8_t ipRouter, Lista<Router>* r_vecinos)
 
     cout << "No se encontro el Router Vecino especificado " << endl;
     return nullptr;
-}
-
-/*
- * Cada paquete pregunta en sigRouter cual es el proximo Router al que tiene que ir
- * para llegar al destino del paquete.
- * Una vez encontrado el paquete lo agrega a la cola de paquetes
- * del Router que corresponde segun el destino del dato
- */
-void Router::enviarPaquetes()
-{
-    //Lista<Paquete>* i = paquetes;
-    for(map<int, Lista<Paquete>*>::iterator i = colaEnvios.begin(); i != colaEnvios.end(); i++)
-    {
-        int r_destino = i->first;
-        Lista<Paquete>* j = i->second;
-        Arista* ari = getArista(r_destino);
-        int ancho = ari->ancho_de_banda * 100;
-
-        Paquete *aux = j->cabeza();
-
-        while (!j->esvacia() || ancho < aux->getPesoPaq())
-        {
-            Router *r_siguiente = tablaEnrutamiento[r_destino];
-            r_siguiente->paquetes->add(aux);
-            j->borrar();
-            ancho -= aux->getPesoPaq();
-        }
-    }
-}
-
-Terminal* Router::getTerminal(uint8_t ipTerminal)
-{
-    Lista<Terminal>* i = listaTerminales;
-
-    while(!i->esvacia())
-    {
-        if(i->cabeza()->getIpTerminal() == ipTerminal)
-            return i->cabeza();
-
-        i = i->resto();
-    }
-
-    cout << "No se entontro la pagina pedida " << endl;
-    return nullptr;
-}
-
-/*
- *
- */
-void Router::enviarPaginas()
-{
-    while(!pagListas->colavacia())
-    {
-        Pagina* aux = pagListas->tope();
-        uint8_t destino = aux->getDestino().ipTerminal;
-
-        getTerminal(destino)->addPagina(aux);
-
-        pagListas->desencolar();
-    }
 }
 
 Arista *Router::getArista(uint8_t ipDestino)
@@ -229,16 +185,140 @@ Arista *Router::getArista(uint8_t ipDestino)
     return nullptr;
 }
 
+/*
+ * Intercala los paquetes para no enviar todos los paquetes de una misma pagina juntos.
+ * Los paquetes que se encuentran en la cola de envios se pasan de manera intercalada
+ * a la cola de paquetes listos de cada Router vecino.
+ */
+void Router::intercalarPaquetes()
+{
+    for(map<int, Lista<Paquete>*>::iterator i = colaEnvios.begin(); i != colaEnvios.end(); i++)
+    {
+        //Se crea lista para el Router vecino correspondiente
+        if(paqListos[i->first] == NULL)
+            paqListos[i->first] = new Lista<Paquete>();
+
+        while(!i->second->esvacia())
+        {
+            //Agrego el primer paquete de la cola en la cola de paquetes listos para enviar
+            Paquete* primero = i->second->cabeza();
+            paqListos[i->first]->add(primero);
+            i->second->borrar();
+
+            if(i->second->esvacia())   //Se borro el ultimo paquete en la linea anterior
+                continue;
+
+            Lista<Paquete>* j = i->second;
+            int idPag = j->cabeza()->getId();
+
+            while(!j->esvacia())
+            {
+                if(idPag != j->cabeza()->getId())
+                {
+                    idPag = j->cabeza()->getId();
+                    Paquete* aux = j->cabeza();
+                    paqListos[i->first]->add(aux);
+                    j = j->resto();
+                    i->second->borrarDato(aux);
+                }
+                else
+                    j = j->resto();
+            }
+
+        }
+    }
+}
+
+void Router::imprimirIntercalado()
+{
+    for(map<int, Lista<Paquete>*>::iterator i = paqListos.begin(); i != paqListos.end(); i++)
+    {
+        Lista<Paquete>* j = i->second;
+
+        while(!j->esvacia())
+        {
+            cout <<"ID paquete: " << j->cabeza()->getId() << endl;
+            j = j->resto();
+        }
+    }
+
+}
+
+/*
+ * Cada paquete pregunta en 'sigRouter' cual es el proximo Router al que tiene que ir
+ * para llegar al destino del paquete.
+ * Una vez encontrado el paquete lo agrega a la cola de paquetes
+ * del Router que corresponde segun el destino del dato.
+ */
+void Router::enviarPaquetes()
+{
+    this->intercalarPaquetes();
+
+    //this->imprimirIntercalado();
+
+    for(map<int, Lista<Paquete>*>::iterator i = paqListos.begin(); i != paqListos.end(); i++)
+    {
+        Lista<Paquete>* j = i->second;
+        Paquete *aux = j->cabeza();
+
+
+        Arista* ari = getArista(i->first);
+        int ancho = ari->ancho_de_banda * 1000;     //Ancho en KB -> medida de los paquetes
+
+        while (!j->esvacia())
+        {
+            uint8_t r_destino = aux->getDestino().ipRouter;
+            aux = j->cabeza();
+            Router *r_siguiente = tablaEnrutamiento[r_destino];
+            r_siguiente->paqNuevos->add(aux);
+            j->borrar();
+        //    ancho -= aux->getPesoPaq();
+        }
+    }
+}
+
+/*
+ * Devuelve la terminal pedida por parametro la cual se encuentra conectada al Router
+ * Imprime un mensaje si no encuentra la terminal especificada
+ */
+Terminal* Router::getTerminal(uint8_t ipTerminal)
+{
+    Lista<Terminal>* i = listaTerminales;
+
+    while(!i->esvacia())
+    {
+        if(i->cabeza()->getIpTerminal() == ipTerminal)
+            return i->cabeza();
+
+        i = i->resto();
+    }
+
+    cout << "No se entontro la pagina pedida " << endl;
+    return nullptr;
+}
+
+void Router::enviarPaginas()
+{
+    while(!pagListas->colavacia())
+    {
+        Pagina* aux = pagListas->tope();
+        uint8_t destino = aux->getDestino().ipTerminal;
+
+        getTerminal(destino)->addPagina(aux);
+
+        pagListas->desencolar();
+    }
+}
 
 void Router::imprimirPaqs()
 {
     int cant, idPag;
 
     for(map<int, Lista<Paquete>*>::iterator i = colaEnvios.begin(); i != colaEnvios.end(); i++){
-
         cant = 0;
         Lista<Paquete>* cola = i->second;
-        idPag = cola->cabeza()->getId();
+        if(!cola->esvacia())
+            idPag = cola->cabeza()->getId();
 
         while(!cola->esvacia())
         {
@@ -246,12 +326,35 @@ void Router::imprimirPaqs()
             {
                 printf("- %d paquetes de la pag %d con destino en Router %d\n", cant, idPag, i->first);
                 idPag = cola->cabeza()->getId();
-                cant = 0;
+                cant = 1;
             }
-            cant++;
+            else
+                cant++;
+
             cola = cola->resto();
         }
         if(cant != 0)
             printf("- %d paquetes de la pag %d con destino en Router %d\n", cant, idPag, i->first);
     }
+}
+
+/*
+ * Calcula el peso total, para cada Router vecino, de todos los paquetes que se deben enviar
+ */
+void Router::getAnchoBandaColas()
+{
+       for(map<int, Lista<Paquete>*>::iterator i = paqListos.begin(); i != paqListos.end(); i++)
+       {
+           Lista<Paquete>* j = i->second;
+           int r_destino = i->first;
+           int pesoTotal = 0;
+
+           while(!j->esvacia())
+           {
+               pesoTotal += j->cabeza()->getPesoPaq();
+               j = j->resto();
+           }
+
+           pesoColas[r_destino] = pesoTotal;
+       }
 }

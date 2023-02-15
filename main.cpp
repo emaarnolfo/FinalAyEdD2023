@@ -10,17 +10,46 @@ int main() {
 
     //Se generan paginas en las terminales
     admin->generarPaginas(admin->nroTerminales);
+    //Se mandan las paginas de los terminales a los Routers correspondientes
+    admin->imprimirPaginas();
+    admin->enviarPaginas();
 
+    for(int i=0; i<admin->nroRouters; i++)
+        admin->Dijkstra(i+1);
+
+    //Desarma las paginas que se encuentran en los Routers
+    for(int i=0; i<admin->nroRouters; i++)
+        admin->getRouter(i+1)->desarmarPaginas();
+
+    for(int i=0; i<admin->nroRouters; i++)
+        admin->getRouter(i+1)->ordenarPaquetes();
+
+    for(int i=0; i<admin->nroRouters; i++)
+        admin->getRouter(i+1)->enviarPaquetes();
+
+
+
+    /*
+
+    cout << "Ciclo 1" << endl;
+    admin->ciclo();
     admin->imprimirPaginas();
     admin->imprimirPaquetes();
 
-    //Se mandan las paginas de los terminales a los Routers correspondientes
-    //admin->enviarPaginas();
+    cout << "Ciclo 2" << endl;
+    admin->ciclo();
+    admin->imprimirPaginas();
+    admin->imprimirPaquetes();
 
-    //admin->ciclo();
+    cout << "Ciclo 3" << endl;
+    admin->ciclo();
+    admin->imprimirPaginas();
+    admin->imprimirPaquetes();
 
-
-
+    cout << "Ciclo 4" << endl;
+    admin->ciclo();
+    admin->imprimirPaginas();
+    admin->imprimirPaquetes();
 
     /*
     for(int i= 0; i < admin->nroRouters; i++){

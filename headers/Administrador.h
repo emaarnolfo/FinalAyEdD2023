@@ -26,6 +26,7 @@ private:
     int routers = 255;
     int matriz[MAX_ROUTERS][MAX_ROUTERS];
 
+
 public:
     Router* routerCzo;
     Lista<Terminal>* terminales = new Lista<Terminal>();

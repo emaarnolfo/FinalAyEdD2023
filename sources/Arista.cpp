@@ -9,4 +9,5 @@ Arista::Arista(int ancho_de_banda, Router *destino) {
     this->destino = destino;
     this->next = NULL;
     this->peso = 10000/ancho_de_banda;    //peso = 10 x 10⁶ / BW  => BW: ancho de banda en Mega bits por segundos
+    this->ciclos = 1;
 }

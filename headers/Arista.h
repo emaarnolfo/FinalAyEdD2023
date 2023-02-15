@@ -11,8 +11,8 @@ class Router;
 
 class Arista {
 public:
-    int ancho_de_banda;
-    int peso;               //Para calcular el camino mas corto con dijkstra sin tener en cuenta el trafico
+    int ancho_de_banda;     //Ancho de banda en MegaByte. Especificado en archivo txt entre 25 MB - 100 MB
+    int peso;               //Inversa del ancho de banda, para definir los caminos mas cortos inciales
     int ciclos;             //Ciclos de demora debido al trafico
     Router* destino;
     Arista* next;

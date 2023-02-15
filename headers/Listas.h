@@ -112,7 +112,7 @@ template <class T>
 T* Lista<T>::cabeza()
 {
     if (this->esvacia()) {
-        cout << " ERROR, Cabeza de lista vacia";
+        //cout << " ERROR, Cabeza de lista vacia ";
     }
     return czo->get_dato();
 }

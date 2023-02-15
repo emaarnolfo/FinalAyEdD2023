@@ -347,6 +347,9 @@ void Administrador::ciclo()
         getRouter(i+1)->enviarPaquetes();
 
     for(int i=0; i<nroRouters; i++)
+        getRouter(i+1)->ordenarPaquetes();
+
+    for(int i=0; i<nroRouters; i++)
         getRouter(i+1)->armarPaginas();
 
     for(int i=0; i<nroRouters; i++)
@@ -355,7 +358,7 @@ void Administrador::ciclo()
 
 void Administrador::imprimirPaginas()
 {
-    cout << "Impresion de " << RED << " tERMINALES" << RESET << endl;
+    cout << endl << "Impresion de " << RED << " Paginas" << RESET << endl;
     Lista<Terminal>* i = terminales;
 
     while(!i->esvacia())
@@ -368,6 +371,8 @@ void Administrador::imprimirPaginas()
         aux->imprimirPaginas();
         i = i->resto();
     }
+
+    cout << endl << " ------------------------------------------------------------------ " << endl;
 }
 
 void Administrador::imprimirPaquetes()
@@ -383,4 +388,6 @@ void Administrador::imprimirPaquetes()
 
         aux = aux->next;
     }
+
+    cout << endl << " ------------------------------------------------------------------ " << endl;
 }

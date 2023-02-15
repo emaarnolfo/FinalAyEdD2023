@@ -55,7 +55,7 @@ void Terminal::imprimirPaginas()
 
         while (!i->esvacia()) {
             Pagina *aux = i->cabeza();
-            cout << "Pagina: " << aux->getId() << " peso: " << aux->getPeso() << " destino: ";
+            cout << "Pagina:" << aux->getId() << " peso:" << aux->getPeso() << " destino:";
             printf("%d.%d\n", aux->getDestino().ipTerminal, aux->getDestino().ipRouter);
 
             i = i->resto();
@@ -69,6 +69,7 @@ void Terminal::imprimirPaginas()
         while (!i->esvacia()) {
             Pagina *aux = i->cabeza();
             cout << "Pagina: " << aux->getId() << " peso: " << aux->getPeso() << endl;
+            i = i->resto();
         }
     }
 }
