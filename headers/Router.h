@@ -18,8 +18,8 @@ class Terminal;
 
 class Router {
 private:
-    map<int, int> pesoColas;
-    void getAnchoBandaColas();
+    int getAnchoBandaLista(Lista<Paquete>* lista);
+    void calcularCiclos();
     void borrarPaquetes(int idPag, Nodo<Paquete>* ant, Lista<Paquete>* lista);
     void crearPaquetes(Pagina* pagina);
     void imprimirIntercalado();

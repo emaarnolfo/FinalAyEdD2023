@@ -341,20 +341,36 @@ void Router::imprimirPaqs()
 /*
  * Calcula el peso total, para cada Router vecino, de todos los paquetes que se deben enviar
  */
-void Router::getAnchoBandaColas()
+int Router::getAnchoBandaLista(Lista<Paquete>* lista)
 {
-       for(map<int, Lista<Paquete>*>::iterator i = paqListos.begin(); i != paqListos.end(); i++)
-       {
-           Lista<Paquete>* j = i->second;
-           int r_destino = i->first;
-           int pesoTotal = 0;
+    int pesoTotal;
 
-           while(!j->esvacia())
-           {
-               pesoTotal += j->cabeza()->getPesoPaq();
-               j = j->resto();
-           }
+    while(!lista->esvacia())
+    {
+        pesoTotal += lista->cabeza()->getPesoPaq();
+        lista = lista->resto();
+    }
 
-           pesoColas[r_destino] = pesoTotal;
-       }
+    return pesoTotal;
+}
+
+/*
+ * Calcula la cantidad de ciclos que hay de demora hacia
+ * cada Router que vaya a recibir paquetes nuevos
+ */
+void Router::calcularCiclos()
+{
+    Arista* aux = arista;
+
+    for(map<int, Lista<Paquete>*>::iterator i = paqListos.begin(); i != paqListos.end(); i++)
+    {
+        int r_destino = i->first;
+        int pesoPaquetes = getAnchoBandaLista(i->second);
+        Arista* aux = this->getArista(r_destino);
+
+        double ciclos = pesoPaquetes / aux->ancho_de_banda;
+
+        if(ciclos > 1)
+            aux->ciclos = ciclos;
+    }
 }
