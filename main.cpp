@@ -5,27 +5,42 @@ using namespace  std;
 
 int main() {
 
-    Administrador* admin = new Administrador();
+    Administrador *admin = new Administrador();
     admin->leerArchivo();
 
     //Se generan paginas en las terminales
     admin->generarPaginas(admin->nroTerminales);
-    //Se mandan las paginas de los terminales a los Routers correspondientes
     admin->imprimirPaginas();
+
+    //Se mandan las paginas de los terminales a los Routers correspondientes
     admin->enviarPaginas();
 
-    for(int i=0; i<admin->nroRouters; i++)
-        admin->Dijkstra(i+1);
+    for (int i = 0; i < admin->nroRouters; i++)
+        admin->Dijkstra(i + 1);
 
     //Desarma las paginas que se encuentran en los Routers
-    for(int i=0; i<admin->nroRouters; i++)
-        admin->getRouter(i+1)->desarmarPaginas();
+    for (int i = 0; i < admin->nroRouters; i++)
+        admin->getRouter(i + 1)->desarmarPaginas();
 
-    for(int i=0; i<admin->nroRouters; i++)
-        admin->getRouter(i+1)->ordenarPaquetes();
+    for (int i = 0; i < admin->nroRouters; i++)
+        admin->getRouter(i + 1)->ordenarPaquetes();
 
-    for(int i=0; i<admin->nroRouters; i++)
-        admin->getRouter(i+1)->enviarPaquetes();
+    admin->imprimirPaquetes();
+
+    for (int i = 0; i < admin->nroRouters; i++)
+        admin->getRouter(i + 1)->enviarPaquetes();
+
+    admin->imprimirPaquetes();
+
+    for (int i = 0; i < admin->nroRouters; i++)
+        admin->getRouter(i + 1)->ordenarPaquetes();
+
+    admin->imprimirPaquetes();
+
+    cout << endl;
+    cout << endl;
+    cout << endl;
+    cout << endl;
 
 
 

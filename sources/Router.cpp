@@ -3,6 +3,7 @@
 //
 
 #include "../headers/Router.h"
+#include <vector>
 
 using namespace std;
 
@@ -25,11 +26,11 @@ void Router::agregarTerminal(Terminal* terminal)
 
 void Router::crearPaquetes(Pagina *pagina)
 {
-    int pesoRestante = pagina->getPeso();           //Peso de la pagina a desarmar: el peso total de todos los paquetes juntos
+    int pesoRestante = pagina->getPeso() * 1000;    //Peso de la pagina a desarmar en KB: el peso total de todos los paquetes juntos
 
-    while(pesoRestante >= 20)
+    while(pesoRestante >= 200)
     {
-        int pesoPaquete = 1 + rand() % 20;
+        int pesoPaquete = 10 + rand() % 191;        //Paquetes entre 10 y 200 KB
         Paquete* nuevo = new Paquete(pagina->getId(),pagina->getPeso(), pagina->getDestino(), pesoPaquete);
         this->paqNuevos->add(nuevo);             //Agrega los paquetes de la pagina a la lista de paquetes del Router
         pesoRestante -= pesoPaquete;
@@ -241,7 +242,6 @@ void Router::imprimirIntercalado()
             j = j->resto();
         }
     }
-
 }
 
 /*
@@ -253,8 +253,6 @@ void Router::imprimirIntercalado()
 void Router::enviarPaquetes()
 {
     this->intercalarPaquetes();
-
-    //this->imprimirIntercalado();
 
     for(map<int, Lista<Paquete>*>::iterator i = paqListos.begin(); i != paqListos.end(); i++)
     {
@@ -312,30 +310,54 @@ void Router::enviarPaginas()
 
 void Router::imprimirPaqs()
 {
-    int cant, idPag;
+    for(map<int, Lista<Paquete>*>::iterator i = colaEnvios.begin(); i != colaEnvios.end(); i++) {
 
-    for(map<int, Lista<Paquete>*>::iterator i = colaEnvios.begin(); i != colaEnvios.end(); i++){
-        cant = 0;
-        Lista<Paquete>* cola = i->second;
-        if(!cola->esvacia())
-            idPag = cola->cabeza()->getId();
+        map<int, int> cantPaquetes;
+
+        Lista<Paquete> *cola = i->second;
 
         while(!cola->esvacia())
         {
-            if(idPag != cola->cabeza()->getId())
-            {
-                printf("- %d paquetes de la pag %d con destino en Router %d\n", cant, idPag, i->first);
-                idPag = cola->cabeza()->getId();
-                cant = 1;
-            }
+            if (cantPaquetes.count(cola->cabeza()->getId()))
+                cantPaquetes[cola->cabeza()->getId()] += 1;
             else
-                cant++;
+                cantPaquetes[cola->cabeza()->getId()] = 1;
 
             cola = cola->resto();
         }
-        if(cant != 0)
-            printf("- %d paquetes de la pag %d con destino en Router %d\n", cant, idPag, i->first);
+
+        for(map<int, int>::iterator j = cantPaquetes.begin(); j != cantPaquetes.end(); j++)
+        {
+            printf("- %d paquetes de la pag %d con destino en Router %d\n", j->second, j->first, i->first);
+        }
     }
+}
+
+void Router::imprimirNuevos()
+{
+    cout << "Paquetes recien llegados al Router" << endl;
+
+    map<int, int> cantPaquetes;
+
+    Lista<Paquete>* cola = paqNuevos;
+
+    while(!cola->esvacia())
+    {
+        if (cantPaquetes.count(cola->cabeza()->getId()))
+            cantPaquetes[cola->cabeza()->getId()] += 1;
+        else
+            cantPaquetes[cola->cabeza()->getId()] = 1;
+
+        cola = cola->resto();
+    }
+
+    cola = paqNuevos;
+
+    for(map<int, int>::iterator j = cantPaquetes.begin(); j != cantPaquetes.end(); j++)
+    {
+        printf("- %d paquetes de la pag %d\n", j->second, j->first);
+    }
+
 }
 
 /*
@@ -360,15 +382,13 @@ int Router::getAnchoBandaLista(Lista<Paquete>* lista)
  */
 void Router::calcularCiclos()
 {
-    Arista* aux = arista;
-
     for(map<int, Lista<Paquete>*>::iterator i = paqListos.begin(); i != paqListos.end(); i++)
     {
         int r_destino = i->first;
         int pesoPaquetes = getAnchoBandaLista(i->second);
         Arista* aux = this->getArista(r_destino);
 
-        double ciclos = pesoPaquetes / aux->ancho_de_banda;
+        double ciclos = (pesoPaquetes*1000) / aux->ancho_de_banda;
 
         if(ciclos > 1)
             aux->ciclos = ciclos;

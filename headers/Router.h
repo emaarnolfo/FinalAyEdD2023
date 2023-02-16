@@ -38,13 +38,10 @@ public:
     map<int, Lista<Paquete>*> colaEnvios;                       //Cola de envios para cada Router vecino sin intercalar
     Lista<Paquete>* paqEnDestino = new Lista<Paquete>();        //Lista de Paquetes en el Router destino, en espera para armar la Pagina
     map<int, Lista<Paquete>*> paqListos;                        //Paquetes listos e intercalados para enviar
-
     Lista<Router>* routersVecinos = new Lista<Router>();        //Lista de todos los Routers vecinos
     Lista<Terminal>* listaTerminales = new Lista<Terminal>();   //Lista de todas las terminales conectadas al Router
-
     Cola<Pagina>* pagRecibidas = new Cola<Pagina>();            //Paginas que llegan desde las terminales. Las cuales se deben dividir en paquetes
     Cola<Pagina>* pagListas = new Cola<Pagina>();               //Paginas listas para mandar a la terminal correspondiente
-
     map<int, Router*> tablaEnrutamiento;                        //Indica a que Router enviar los paquetes segun su destino
 
     Router* next;
@@ -60,11 +57,8 @@ public:
     void enviarPaginas();
     void imprimirPaqs();
     void intercalarPaquetes();
+    void imprimirNuevos();
     Arista* getArista(uint8_t ipDestino);
-
-
-
-    //Pasar a privado
     Terminal* getTerminal(uint8_t ipTerminal);
 };
 
