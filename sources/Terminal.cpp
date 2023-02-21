@@ -18,7 +18,7 @@ Terminal::Terminal(std::uint8_t  ipTerminal, Router* router)
 
 void Terminal::generarPagina()
 {
-    int peso = 1 + rand() %10;         //Genera un peso entre 1 y 10 MB
+    int peso = 1 + rand() %25;         //Genera un peso entre 1 y 25 MB
     IP* destAux;
 
     do{
@@ -30,9 +30,28 @@ void Terminal::generarPagina()
 
     Pagina* nuevaPag = new Pagina(peso, destino);
 
-    //delete destAux;
-
     pagPendiendes->encolar(nuevaPag);
+/*
+    FILE* fp;
+    char* nombre = strcat(ruta, "/paginas.txt");
+    fp = fopen(nombre, "a");
+
+    if(fp != nullptr)
+    {
+        fprintf(fp, "idPagina:%-4d Peso:%-4d Origen:%d.%-4d Destino:%d.%d\n", nuevaPag->getId(), nuevaPag->getPeso(), this->ipRouter, this->ipTerminal, nuevaPag->getDestino().ipRouter, nuevaPag->getDestino().ipTerminal);
+        fclose(fp);
+    }
+
+
+/*
+    agregarPag(char* cadena) {
+        FILE* archivo = fopen("informacion.txt", "a"); // "a" significa "append" o "añadir"
+        if (archivo != NULL) {
+            fprintf(archivo, "%s", cadena);
+            fclose(archivo);
+        }
+    }
+    */
 }
 
 void Terminal::enviarPaginas()

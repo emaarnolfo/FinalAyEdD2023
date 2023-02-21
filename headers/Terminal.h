@@ -9,6 +9,7 @@
 #include "Pagina.h"
 #include <cstdlib>
 #include "Router.h"
+#include <string.h>
 
 using namespace std;
 

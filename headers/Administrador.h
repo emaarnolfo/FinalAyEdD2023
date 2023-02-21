@@ -46,7 +46,7 @@ public:
     void leerArchivo();
     void ciclo();
     void enviarPaginas();
-    void imprimirPaginas();
+    void imprimirTermianles();
     void imprimirPaquetes();
 
 };

@@ -63,6 +63,7 @@ void Administrador::addTerminal(uint8_t ipRouter, uint8_t ipTerminal)
     }
 }
 
+
 /*
  * Genera la cantidad de paginas que se le pasan por parametro.
  * Las paginas se generan en terminales aleatorias que se
@@ -77,6 +78,7 @@ void Administrador::generarPaginas(int nroPaginas)
         terminal->generarPagina();
     }
 }
+
 
 void Administrador::addArista(uint8_t IPorigen, uint8_t IPdestino, int ancho_de_banda)
 {
@@ -240,9 +242,8 @@ void Administrador::Dijkstra(short IPorigen)
 
 char* Administrador::rutaActual()
 {
-    char* buf = get_current_dir_name();
-
     // Obtiene la ruta actual
+    char* buf = get_current_dir_name();
 
     // Convierte la ruta actual a una cadena de C++
     string pathAlt(buf);
@@ -253,9 +254,7 @@ char* Administrador::rutaActual()
     if (pos != string::npos)        // Si se encontró la barra diagonal
         pathAlt.erase(pos);         // Elimina todo despues de la ultima barra diagonal
 
-
-    string path2 = pathAlt + "/config.txt";
-
+    string path2 = pathAlt;
     char* path = strcpy(new char[path2.length() + 1], path2.c_str());
 
     return path;
@@ -264,7 +263,8 @@ char* Administrador::rutaActual()
 void Administrador::leerArchivo()
 {
     FILE* fp;
-    fp = fopen(rutaActual(), "r");
+    char* nombre = strcat(rutaActual(), "/config.txt");
+    fp = fopen(nombre, "r");
 
     if (fp == NULL) {
         printf("Error al abrir el archivo\n");
@@ -332,10 +332,6 @@ void Administrador::enviarPaginas()
 
 void Administrador::ciclo()
 {
-    //Dijkstra: Calcula los caminos desde todos los nodos hacia todos los nodos
-    for(int i=0; i<nroRouters; i++)
-        Dijkstra(i+1);
-
     //Desarma las paginas que se encuentran en los Routers
     for(int i=0; i<nroRouters; i++)
         getRouter(i+1)->desarmarPaginas();
@@ -354,9 +350,12 @@ void Administrador::ciclo()
 
     for(int i=0; i<nroRouters; i++)
         getRouter(i+1)->enviarPaginas();
+
+    imprimirTermianles();
+    imprimirPaquetes();
 }
 
-void Administrador::imprimirPaginas()
+void Administrador::imprimirTermianles()
 {
     cout << endl << "Impresion de " << RED << " Paginas" << RESET << endl;
     Lista<Terminal>* i = terminales;
