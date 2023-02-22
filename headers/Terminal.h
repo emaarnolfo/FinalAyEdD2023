@@ -10,6 +10,8 @@
 #include <cstdlib>
 #include "Router.h"
 #include <string.h>
+#include <iostream>
+#include <unistd.h>
 
 using namespace std;
 
@@ -38,6 +40,7 @@ public:
     Router* getRouter() { return routerPadre; };
     void enviarPaginas();
     void imprimirPaginas();
+    char* rutaActual();
 };
 
 #endif //FINALAYEDD2023_TERMINAL_H

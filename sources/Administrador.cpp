@@ -8,6 +8,7 @@ Administrador::Administrador() {
     this->routerCzo = NULL;
     this->nroRouters = 0;
     this->nroTerminales = 0;
+    this->contCiclos = 0;
 }
 
 bool Administrador::esVacio() {
@@ -332,6 +333,8 @@ void Administrador::enviarPaginas()
 
 void Administrador::ciclo()
 {
+    cout << BLACK << BG_YELLOW << " CICLO " << ++contCiclos <<" " << RESET << endl;
+
     //Desarma las paginas que se encuentran en los Routers
     for(int i=0; i<nroRouters; i++)
         getRouter(i+1)->desarmarPaginas();
@@ -383,7 +386,7 @@ void Administrador::imprimirPaquetes()
         cout << endl << REVERSED;
         printf("Router %d:", aux->IP);
         cout << RESET <<endl;
-        aux->imprimirPaqs();
+        aux->imprimirPaqs(this->contCiclos);
 
         aux = aux->next;
     }

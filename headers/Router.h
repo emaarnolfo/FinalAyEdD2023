@@ -9,6 +9,7 @@
 #include "Terminal.h"
 #include "Paquete.h"
 #include "Arista.h"
+#include "Ruta.h"
 #include <map>
 
 using namespace std;
@@ -16,7 +17,7 @@ using namespace std;
 class Arista;
 class Terminal;
 
-class Router {
+class Router: public Ruta{
 private:
     int getAnchoBandaLista(Lista<Paquete>* lista);
     void calcularCiclos();
@@ -59,7 +60,7 @@ public:
     void armarPaginas();
     void enviarPaquetes();
     void enviarPaginas();
-    void imprimirPaqs();
+    void imprimirPaqs(int numCiclos);
 
 
     Arista* getArista(uint8_t ipDestino);

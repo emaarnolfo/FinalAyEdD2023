@@ -28,9 +28,9 @@ void Router::crearPaquetes(Pagina *pagina)
 {
     int pesoRestante = pagina->getPeso() * 1000;    //Peso de la pagina a desarmar en KB: el peso total de todos los paquetes juntos
 
-    while(pesoRestante >= 50)
+    while(pesoRestante >= 500)
     {
-        int pesoPaquete = 50 + rand() % 151;        //Paquetes entre 50 y 200 KB
+        int pesoPaquete = 200 + rand() % 301;        //Paquetes entre 200 y 500 KB
         Paquete* nuevo = new Paquete(pagina->getId(),pagina->getPeso(), pagina->getDestino(), pesoPaquete);
         this->paqNuevos->add(nuevo);             //Agrega los paquetes de la pagina a la lista de paquetes del Router
         pesoRestante -= pesoPaquete;
@@ -73,8 +73,8 @@ void Router::borrarPaquetes(int idPag, Nodo<Paquete>* ant, Lista<Paquete>* paque
             }
             else {
                 ant->set_next(paquetes->getCzo()->get_next());
-                delete paquetes->cabeza();
-                borrarPaquetes(idPag, paquetes->getCzo(), paquetes->resto());
+                paquetes->borrar();
+                borrarPaquetes(idPag, paquetes->getCzo(), paquetes);
             }
         }
         if(!paquetes->esvacia())
@@ -88,7 +88,6 @@ void Router::borrarPaquetes(int idPag, Nodo<Paquete>* ant, Lista<Paquete>* paque
  */
 void Router::armarPaginas()
 {
-    if(!paqEnDestino->esvacia()){           //Verifico que haya paquetes en el destino
         Lista<Paquete>* i = paqEnDestino;
 
         while(!i->esvacia())
@@ -116,7 +115,6 @@ void Router::armarPaginas()
 
             i = i->resto();
         }
-    }
 }
 
 /*
@@ -311,8 +309,9 @@ void Router::enviarPaginas()
     }
 }
 
-void Router::imprimirPaqs()
+void Router::imprimirPaqs(int numCiclos)
 {
+
     map<int, int> cantPaquetes;
     Lista<Paquete>* cola = paqEnDestino;
 
@@ -326,16 +325,19 @@ void Router::imprimirPaqs()
         cola = cola->resto();
     }
 
-    printf("Paquetes que se encuentran en el Router destino\n");
+    printf("Paquetes en destino:\n");
     for(map<int, int>::iterator j = cantPaquetes.begin(); j != cantPaquetes.end(); j++)
-        printf("- %d paquetes de la pag %d\n", j->second, j->first);
+        printf("\t- %d paquetes de la pag %d\n", j->second, j->first);
 
+    /*
+    */
 
     printf("Paquetes en cola de envios:\n");
 
+    map<int, int> cantPaquetes2;
     for(map<int, Lista<Paquete>*>::iterator i = colaEnvios.begin(); i != colaEnvios.end(); i++) {
 
-        map<int, int> cantPaquetes;
+
         Lista<Paquete> *cola = i->second;
 
         while(!cola->esvacia())
@@ -348,10 +350,30 @@ void Router::imprimirPaqs()
             cola = cola->resto();
         }
 
-        for(map<int, int>::iterator j = cantPaquetes.begin(); j != cantPaquetes.end(); j++)
+        for(map<int, int>::iterator j = cantPaquetes2.begin(); j != cantPaquetes2.end(); j++)
         {
-            printf("- %d paquetes de la pag %d\n", j->second, j->first);
+            printf("\t- %d paquetes de la pag %d\n", j->second, j->first);
         }
+    }
+
+    char nombreArchivo[100];
+
+    snprintf(nombreArchivo, 100, "%s/salida/paquetes%d.txt", rutaActual(), numCiclos);
+    FILE* fp = fopen(nombreArchivo, "a");
+    fprintf(fp, "\nRouter %d:\n", this->IP);
+
+    if(fp != nullptr)
+    {
+        fprintf(fp, "Paquetes en cola de envios:\n");
+        for(map<int, int>::iterator j = cantPaquetes2.begin(); j != cantPaquetes2.end(); j++)
+            fprintf(fp, "\t- %d paquetes de la pag %d\n", j->second, j->first);
+
+
+        fprintf(fp, "Paquetes en destino:\n");
+        for(map<int, int>::iterator j = cantPaquetes.begin(); j != cantPaquetes.end(); j++)
+            fprintf(fp, "\t- %d paquetes de la pag %d\n", j->second, j->first);
+
+        fclose(fp);
     }
 }
 

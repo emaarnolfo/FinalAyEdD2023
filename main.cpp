@@ -21,11 +21,7 @@ int main() {
     admin->ciclo();
     admin->ciclo();
     admin->ciclo();
-    admin->ciclo();
-    admin->ciclo();
-    admin->ciclo();
-    admin->ciclo();
-    admin->ciclo();
+
 
     cout << endl;
     cout << endl;

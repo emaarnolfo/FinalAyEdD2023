@@ -16,9 +16,29 @@ Terminal::Terminal(std::uint8_t  ipTerminal, Router* router)
     tabla->add(nvoTerminal);
 }
 
+char* Terminal::rutaActual()
+{
+    // Obtiene la ruta actual
+    char* buf = get_current_dir_name();
+
+    // Convierte la ruta actual a una cadena de C++
+    string pathAlt(buf);
+
+    // Encuentra la última aparición de la barra diagonal
+    size_t pos = pathAlt.find_last_of("/");
+
+    if (pos != string::npos)        // Si se encontró la barra diagonal
+        pathAlt.erase(pos);         // Elimina todo despues de la ultima barra diagonal
+
+    string path2 = pathAlt;
+    char* path = strcpy(new char[path2.length() + 1], path2.c_str());
+
+    return path;
+}
+
 void Terminal::generarPagina()
 {
-    int peso = 1 + rand() %25;         //Genera un peso entre 1 y 25 MB
+    int peso = 1 + rand() %5;         //Genera un peso entre 1 y 25 MB
     IP* destAux;
 
     do{
@@ -31,10 +51,11 @@ void Terminal::generarPagina()
     Pagina* nuevaPag = new Pagina(peso, destino);
 
     pagPendiendes->encolar(nuevaPag);
-/*
-    FILE* fp;
-    char* nombre = strcat(ruta, "/paginas.txt");
-    fp = fopen(nombre, "a");
+
+
+    char nombreArchivo[100];
+    snprintf(nombreArchivo, 100, "%s/paginas.txt", rutaActual());
+    FILE* fp = fopen(nombreArchivo, "a");
 
     if(fp != nullptr)
     {

@@ -25,6 +25,7 @@ private:
     char* rutaActual();
     int routers = 255;
     int matriz[MAX_ROUTERS][MAX_ROUTERS];
+    int contCiclos;
 
 
 public:
