@@ -78,6 +78,16 @@ void Administrador::generarPaginas(int nroPaginas)
         Terminal *terminal = terminales->get(index);
         terminal->generarPagina();
     }
+
+    char nombreArchivo[100];
+    snprintf(nombreArchivo, 100, "%s/salida/paginas.txt", rutaActual());
+    FILE* fp = fopen(nombreArchivo, "a");
+
+    if(fp != nullptr)
+    {
+        fprintf(fp, "\n");
+        fclose(fp);
+    }
 }
 
 

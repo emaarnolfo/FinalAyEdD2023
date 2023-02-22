@@ -12,6 +12,7 @@ int main() {
     admin->generarPaginas(admin->nroTerminales);
     admin->imprimirTermianles();
 
+
     //Se mandan las paginas de los terminales a los Routers correspondientes
     admin->enviarPaginas();
 
@@ -22,6 +23,8 @@ int main() {
     admin->ciclo();
     admin->ciclo();
 
+
+    admin->generarPaginas(admin->nroTerminales);
 
     cout << endl;
     cout << endl;

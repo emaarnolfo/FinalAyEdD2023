@@ -54,7 +54,7 @@ void Terminal::generarPagina()
 
 
     char nombreArchivo[100];
-    snprintf(nombreArchivo, 100, "%s/paginas.txt", rutaActual());
+    snprintf(nombreArchivo, 100, "%s/salida/paginas.txt", rutaActual());
     FILE* fp = fopen(nombreArchivo, "a");
 
     if(fp != nullptr)
