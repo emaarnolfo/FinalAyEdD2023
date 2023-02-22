@@ -13,6 +13,9 @@
 #include <iostream>
 #include <unistd.h>
 
+#define TAM_MAX_PAG 5
+#define TAM_MIN_PAG 1
+
 using namespace std;
 
 class Router;

@@ -145,8 +145,13 @@ bool costoMinimo(const pair<Router*, int>& a, const pair<Router*, int>& b)
 {
     return a.second < b.second;
 }
-
-void Administrador::Dijkstra(short IPorigen)
+/*
+ * Algoritmo de dijkstra para calcular el camino mas corto
+ * desde el router origen que se pasa por parametro
+ * Opcion 1: el algoritmo resuleve el camino segun los anchos de banda de las aristas
+ * Opcion 2: el algoritmo resuleve el camino segun los ciclos de las aristas
+ */
+void Administrador::Dijkstra(short IPorigen, int opcion)
 {
     Router* r_origen = getRouter(IPorigen);
 
@@ -158,7 +163,6 @@ void Administrador::Dijkstra(short IPorigen)
         map<Router*, bool> visitados;           //Par ordenado con los Routers de la red y su booleano que indica si fue visitado
         map<Router*, Router*> rutas;            //Ruta que va desde el origen ingresado hacia cada Router de la red
         map<Router*, int> cola;                 //Cola de prioridad
-        //Cola<Router*>* cola2;                 //Cola que indica los siguientes nodos a visitar
         map<Router*, int> distancias;           //Distancia desde el router origen ingresado hacia cada Router
 
 
@@ -184,7 +188,15 @@ void Administrador::Dijkstra(short IPorigen)
             //Se carga la matriz con los pesos de los ancho de banda
             while(aj != NULL)
             {
-                matriz[ri][aj->destino] = aj->peso;
+                if(opcion == 1)
+                    matriz[ri][aj->destino] = aj->peso;
+                else if(opcion == 2)
+                    matriz[ri][aj->destino] = aj->ciclos;
+                else{
+                    cout << "Opcion incorrecta en Dijkstra" << endl;
+                    exit(1);
+                }
+
                 aj = aj->next;
             }
             ri = ri->next;
@@ -230,7 +242,6 @@ void Administrador::Dijkstra(short IPorigen)
         for(map<Router*, int>::iterator i = distancias.begin(); i != distancias.end(); i++)
             //printf("%d: %d\n",i->first->IP, i->second);
 
-
         //Muestra las rutas completas
         for(map<Router*, Router*>::iterator i = rutas.begin(); i != rutas.end(); i++)
         {
@@ -273,8 +284,12 @@ char* Administrador::rutaActual()
 
 void Administrador::leerArchivo()
 {
+    cout << "Leyendo archivo con informacion de la red" <<endl;
+
+    char nombre[100];
+    snprintf(nombre, 100, "%s/config2.txt", rutaActual());
+
     FILE* fp;
-    char* nombre = strcat(rutaActual(), "/config.txt");
     fp = fopen(nombre, "r");
 
     if (fp == NULL) {
@@ -340,6 +355,14 @@ void Administrador::enviarPaginas()
     }
 }
 
+void Administrador::recalcular()
+{
+    for(int i=0; i<nroRouters; i++)
+        getRouter(i+1)->calcularCiclos();
+
+    for(int i=0; i<nroRouters; i++)
+        Dijkstra(i+1, 2);
+}
 
 void Administrador::ciclo()
 {
@@ -348,9 +371,6 @@ void Administrador::ciclo()
     //Desarma las paginas que se encuentran en los Routers
     for(int i=0; i<nroRouters; i++)
         getRouter(i+1)->desarmarPaginas();
-
-    for(int i=0; i<nroRouters; i++)
-        getRouter(i+1)->ordenarPaquetes();
 
     for(int i=0; i<nroRouters; i++)
         getRouter(i+1)->enviarPaquetes();
@@ -389,17 +409,16 @@ void Administrador::imprimirTermianles()
 
 void Administrador::imprimirPaquetes()
 {
-    cout << endl << endl << "Impresion de " << RED << " Paquetes" << RESET << endl;
+    //cout << endl << endl << "Impresion de " << RED << " Paquetes" << RESET << endl;
     Router* aux = routerCzo;
 
     while(aux != nullptr){
-        cout << endl << REVERSED;
-        printf("Router %d:", aux->IP);
-        cout << RESET <<endl;
+        //cout << endl << REVERSED;
+        //printf("Router %d:", aux->IP);
+        //cout << RESET <<endl;
         aux->imprimirPaqs(this->contCiclos);
-
         aux = aux->next;
     }
 
-    cout << endl << " ------------------------------------------------------------------ " << endl;
+    //cout << endl << " ------------------------------------------------------------------ " << endl;
 }

@@ -7,6 +7,8 @@
 
 using namespace std;
 
+
+
 Router::Router(uint8_t IP) {
     this->IP = IP;
     this->next = NULL;
@@ -28,9 +30,9 @@ void Router::crearPaquetes(Pagina *pagina)
 {
     int pesoRestante = pagina->getPeso() * 1000;    //Peso de la pagina a desarmar en KB: el peso total de todos los paquetes juntos
 
-    while(pesoRestante >= 500)
+    while(pesoRestante >= TAM_MAX_PAQ)
     {
-        int pesoPaquete = 200 + rand() % 301;        //Paquetes entre 200 y 500 KB
+        int pesoPaquete = TAM_MIN_PAQ + rand() % (TAM_MAX_PAQ - TAM_MIN_PAQ + 1);        //Paquetes entre 50 y 200 KB
         Paquete* nuevo = new Paquete(pagina->getId(),pagina->getPeso(), pagina->getDestino(), pesoPaquete);
         this->paqNuevos->add(nuevo);             //Agrega los paquetes de la pagina a la lista de paquetes del Router
         pesoRestante -= pesoPaquete;
@@ -74,7 +76,7 @@ void Router::borrarPaquetes(int idPag, Nodo<Paquete>* ant, Lista<Paquete>* paque
             else {
                 ant->set_next(paquetes->getCzo()->get_next());
                 paquetes->borrar();
-                borrarPaquetes(idPag, paquetes->getCzo(), paquetes);
+                borrarPaquetes(idPag, ant, paquetes);
             }
         }
         if(!paquetes->esvacia())
@@ -154,10 +156,9 @@ void Router::ordenarPaquetes()
             i =  i->resto();
             paqNuevos->borrarDato(nuevo);
         }
-
-        //Se guardan los paquetes de manera intercalada en la cola de envios
-        intercalarPaquetes(mapaAux);
     }
+    //Se guardan los paquetes de manera intercalada en la cola de envios
+    intercalarPaquetes(mapaAux);
 }
 
 Router* Router::getRoutVec(uint8_t ipRouter, Lista<Router>* r_vecinos)
@@ -311,70 +312,62 @@ void Router::enviarPaginas()
 
 void Router::imprimirPaqs(int numCiclos)
 {
+    char nombreArchivo[100];
+    snprintf(nombreArchivo, 100, "%s/salida/paquetes%d.txt", rutaActual(), numCiclos);
+    FILE* fp = fopen(nombreArchivo, "a");
+    fprintf(fp, "\nROUTER %d:\n", this->IP);
 
-    map<int, int> cantPaquetes;
+    map<int, int> enDestino;
     Lista<Paquete>* cola = paqEnDestino;
 
     while(!cola->esvacia())
     {
-        if (cantPaquetes.count(cola->cabeza()->getId()))        //Si ya se encuentra un paqute con el mismo idPag se incrementa la cantidad del mismo
-            cantPaquetes[cola->cabeza()->getId()] += 1;
+        if (enDestino.count(cola->cabeza()->getId()))        //Si ya se encuentra un paqute con el mismo idPag se incrementa la cantidad del mismo
+            enDestino[cola->cabeza()->getId()] += 1;
         else
-            cantPaquetes[cola->cabeza()->getId()] = 1;              //Sino si crea el nuevo mapa y comienza en 1
+            enDestino[cola->cabeza()->getId()] = 1;              //Sino si crea el nuevo mapa y comienza en 1
 
         cola = cola->resto();
     }
 
-    printf("Paquetes en destino:\n");
-    for(map<int, int>::iterator j = cantPaquetes.begin(); j != cantPaquetes.end(); j++)
-        printf("\t- %d paquetes de la pag %d\n", j->second, j->first);
+    if(!enDestino.empty())
+        fprintf(fp, "\tPaquetes en destino:\n");
 
-    /*
-    */
+    while(!enDestino.empty())
+    {
+        fprintf(fp, "\t\t- %d paquetes de la pag %d\n", enDestino.begin()->second, enDestino.begin()->first);
+        enDestino.erase(enDestino.begin());
+    }
 
-    printf("Paquetes en cola de envios:\n");
-
-    map<int, int> cantPaquetes2;
     for(map<int, Lista<Paquete>*>::iterator i = colaEnvios.begin(); i != colaEnvios.end(); i++) {
 
-
+        map<int, int> enColaEnvios;
         Lista<Paquete> *cola = i->second;
 
         while(!cola->esvacia())
         {
-            if (cantPaquetes.count(cola->cabeza()->getId()))
-                cantPaquetes[cola->cabeza()->getId()] += 1;
+            if (enColaEnvios.count(cola->cabeza()->getId()))
+                enColaEnvios[cola->cabeza()->getId()] += 1;
             else
-                cantPaquetes[cola->cabeza()->getId()] = 1;
+                enColaEnvios[cola->cabeza()->getId()] = 1;
 
             cola = cola->resto();
         }
 
-        for(map<int, int>::iterator j = cantPaquetes2.begin(); j != cantPaquetes2.end(); j++)
-        {
-            printf("\t- %d paquetes de la pag %d\n", j->second, j->first);
+        if(!enColaEnvios.empty() && i == colaEnvios.begin())
+            fprintf(fp, "\tPaquetes en cola de envios:\n");
+
+        if(fp != nullptr){
+            while (!enColaEnvios.empty()) {
+                fprintf(fp, "\t\t- %d paquetes de la pag %d (siguiente Router: %d)\n"
+                        , enColaEnvios.begin()->second, enColaEnvios.begin()->first, i->first);
+                enColaEnvios.erase(enColaEnvios.begin());
+            }
         }
     }
 
-    char nombreArchivo[100];
-
-    snprintf(nombreArchivo, 100, "%s/salida/paquetes%d.txt", rutaActual(), numCiclos);
-    FILE* fp = fopen(nombreArchivo, "a");
-    fprintf(fp, "\nRouter %d:\n", this->IP);
-
     if(fp != nullptr)
-    {
-        fprintf(fp, "Paquetes en cola de envios:\n");
-        for(map<int, int>::iterator j = cantPaquetes2.begin(); j != cantPaquetes2.end(); j++)
-            fprintf(fp, "\t- %d paquetes de la pag %d\n", j->second, j->first);
-
-
-        fprintf(fp, "Paquetes en destino:\n");
-        for(map<int, int>::iterator j = cantPaquetes.begin(); j != cantPaquetes.end(); j++)
-            fprintf(fp, "\t- %d paquetes de la pag %d\n", j->second, j->first);
-
         fclose(fp);
-    }
 }
 
 void Router::imprimirNuevos()
@@ -407,7 +400,7 @@ void Router::imprimirNuevos()
 /*
  * Calcula el peso total, para cada Router vecino, de todos los paquetes que se deben enviar
  */
-int Router::getAnchoBandaLista(Lista<Paquete>* lista)
+int Router::getPesoLista(Lista<Paquete>* lista)
 {
     int pesoTotal;
 
@@ -429,12 +422,12 @@ void Router::calcularCiclos()
     for(map<int, Lista<Paquete>*>::iterator i = colaEnvios.begin(); i != colaEnvios.end(); i++)
     {
         int r_destino = i->first;
-        int pesoPaquetes = getAnchoBandaLista(i->second);
+        int pesoPaquetes = getPesoLista(i->second);
         Arista* aux = this->getArista(r_destino);
 
         double ciclos = (pesoPaquetes*1000) / aux->ancho_de_banda;
 
         if(ciclos > 1)
-            aux->ciclos = ciclos;
+            aux->setCiclo(ciclos);
     }
 }

@@ -12,6 +12,9 @@
 #include "Ruta.h"
 #include <map>
 
+#define TAM_MAX_PAQ 500
+#define TAM_MIN_PAQ 200
+
 using namespace std;
 
 class Arista;
@@ -19,8 +22,7 @@ class Terminal;
 
 class Router: public Ruta{
 private:
-    int getAnchoBandaLista(Lista<Paquete>* lista);
-    void calcularCiclos();
+    int getPesoLista(Lista<Paquete>* lista);
     void imprimirNuevos();
     void imprimirEnDestino();
     void borrarPaquetes(int idPag, Nodo<Paquete>* ant, Lista<Paquete>* lista);
@@ -61,6 +63,7 @@ public:
     void enviarPaquetes();
     void enviarPaginas();
     void imprimirPaqs(int numCiclos);
+    void calcularCiclos();
 
 
     Arista* getArista(uint8_t ipDestino);

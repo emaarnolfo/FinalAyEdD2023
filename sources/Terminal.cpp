@@ -38,7 +38,7 @@ char* Terminal::rutaActual()
 
 void Terminal::generarPagina()
 {
-    int peso = 1 + rand() %5;         //Genera un peso entre 1 y 25 MB
+    int peso = TAM_MIN_PAG + rand() % (TAM_MAX_PAG - TAM_MIN_PAG);         //Genera un peso entre 10 y 25 MB
     IP* destAux;
 
     do{
