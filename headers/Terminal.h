@@ -12,15 +12,17 @@
 #include <string.h>
 #include <iostream>
 #include <unistd.h>
+#include "Ruta.h"
 
-#define TAM_MAX_PAG 5
-#define TAM_MIN_PAG 1
+//Tamaño de las paginas en MB
+#define TAM_MAX_PAG 20
+#define TAM_MIN_PAG 15
 
 using namespace std;
 
 class Router;
 
-class Terminal {
+class Terminal: public Ruta{
     uint8_t ipTerminal;
     uint8_t ipRouter;
     Router* routerPadre;
@@ -43,7 +45,7 @@ public:
     Router* getRouter() { return routerPadre; };
     void enviarPaginas();
     void imprimirPaginas();
-    char* rutaActual();
+
 };
 
 #endif //FINALAYEDD2023_TERMINAL_H

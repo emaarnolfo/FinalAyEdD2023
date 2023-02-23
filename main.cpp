@@ -12,7 +12,6 @@ int main() {
     Terminal *terminal = admin->terminales->get(2);
     terminal->generarPagina();
     terminal->generarPagina();
-    terminal->generarPagina();
 
 
     /*
@@ -28,10 +27,13 @@ int main() {
 
     admin->ciclo();
     admin->ciclo();
-    //admin->recalcular();
+    admin->recalcular();
     admin->ciclo();
     admin->ciclo();
-    //admin->recalcular();
+    admin->recalcular();
+    admin->ciclo();
+    admin->ciclo();
+    admin->recalcular();
     admin->ciclo();
     admin->ciclo();
 

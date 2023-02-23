@@ -80,7 +80,7 @@ void Administrador::generarPaginas(int nroPaginas)
     }
 
     char nombreArchivo[100];
-    snprintf(nombreArchivo, 100, "%s/salida/paginas.txt", rutaActual());
+    snprintf(nombreArchivo, 100, "%s/salida/PagGeneradas.txt", rutaActual());
     FILE* fp = fopen(nombreArchivo, "a");
 
     if(fp != nullptr)
@@ -159,7 +159,7 @@ void Administrador::Dijkstra(short IPorigen, int opcion)
         cout << "El vertice origen no existe" <<endl;
     else
     {
-        map<Router*, map<Router*, int>> matriz;
+        map<Router*, map<Router*, double>> matriz;
         map<Router*, bool> visitados;           //Par ordenado con los Routers de la red y su booleano que indica si fue visitado
         map<Router*, Router*> rutas;            //Ruta que va desde el origen ingresado hacia cada Router de la red
         map<Router*, int> cola;                 //Cola de prioridad
@@ -373,6 +373,9 @@ void Administrador::ciclo()
         getRouter(i+1)->desarmarPaginas();
 
     for(int i=0; i<nroRouters; i++)
+        getRouter(i+1)->ordenarPaquetes();
+
+    for(int i=0; i<nroRouters; i++)
         getRouter(i+1)->enviarPaquetes();
 
     for(int i=0; i<nroRouters; i++)
@@ -397,7 +400,7 @@ void Administrador::imprimirTermianles()
     {
         Terminal* aux = i->cabeza();
         cout <<endl << REVERSED;
-        printf("Terminal %d.%d", aux->getIpTerminal(), aux->getIpRouter());
+        printf("Terminal %d.%d", aux->getIpRouter(), aux->getIpTerminal());
         cout << RESET << endl;
 
         aux->imprimirPaginas();

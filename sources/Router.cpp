@@ -111,6 +111,7 @@ void Router::armarPaginas()
                 pagListas->add(nueva);
                 borrarPaq(nueva->getId(), paqEnDestino);
                 i = paqEnDestino;
+                continue;
             }
             if(paqEnDestino->esvacia())
                 break;
@@ -299,15 +300,23 @@ Terminal* Router::getTerminal(uint8_t ipTerminal)
 
 void Router::enviarPaginas()
 {
-    while(!pagListas->colavacia())
-    {
-        Pagina* aux = pagListas->tope();
+    char nombreArchivo[100];
+    snprintf(nombreArchivo, 100, "%s/salida/PagEnDestino.txt", rutaActual());
+    FILE *fp = fopen(nombreArchivo, "a");
+
+    while(!pagListas->colavacia()) {
+        Pagina *aux = pagListas->tope();
         uint8_t destino = aux->getDestino().ipTerminal;
 
         getTerminal(destino)->addPagina(aux);
 
         pagListas->desencolar();
+
+        if(fp != nullptr)
+            fprintf(fp, "idPagina:%-4d Peso:%-4d Destino:%d.%d\n",
+                    aux->getId(), aux->getPeso(), aux->getDestino().ipRouter, aux->getDestino().ipTerminal);
     }
+    fclose(fp);
 }
 
 void Router::imprimirPaqs(int numCiclos)
@@ -402,7 +411,7 @@ void Router::imprimirNuevos()
  */
 int Router::getPesoLista(Lista<Paquete>* lista)
 {
-    int pesoTotal;
+    int pesoTotal = 0;
 
     while(!lista->esvacia())
     {
@@ -425,9 +434,9 @@ void Router::calcularCiclos()
         int pesoPaquetes = getPesoLista(i->second);
         Arista* aux = this->getArista(r_destino);
 
-        double ciclos = (pesoPaquetes*1000) / aux->ancho_de_banda;
+        double ciclos = (double)(pesoPaquetes/1000) / aux->ancho_de_banda;
 
         if(ciclos > 1)
-            aux->setCiclo(ciclos);
+            aux->ciclos = ciclos;
     }
 }
