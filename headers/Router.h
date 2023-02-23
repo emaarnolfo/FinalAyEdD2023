@@ -65,6 +65,7 @@ public:
     void enviarPaginas();
     void imprimirPaqs(int numCiclos);
     void calcularCiclos();
+    uint8_t getIp() { return this->IP; };
 
 
     Arista* getArista(uint8_t ipDestino);

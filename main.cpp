@@ -12,6 +12,7 @@ int main() {
     Terminal *terminal = admin->terminales->get(2);
     terminal->generarPagina();
     terminal->generarPagina();
+    admin->imprimirTermianles();
 
 
     /*
