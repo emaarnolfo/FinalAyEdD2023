@@ -15,14 +15,14 @@
 #include <unistd.h>
 #include <string.h>
 #include <cstring>
+#include "Ruta.h"
 
 #define MAX_ROUTERS 255
 
 using namespace std;
 
-class Administrador {
+class Administrador : public Ruta {
 private:
-    char* rutaActual();
     int routers = 255;
     int matriz[MAX_ROUTERS][MAX_ROUTERS];
     int contCiclos;
