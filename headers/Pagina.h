@@ -16,7 +16,7 @@ class Pagina {
     int id;
     int peso;
     IP destino;
-    inline static int contPaginas = 1;          //Variable estatica para generar ID diferentes en cada instancia de la clase
+    inline static int contPaginas = 1;          //Variable estatica para generar IDs diferentes en cada instancia de la clase
 
 public:
     Pagina(int peso, IP destino);               //Constructor con ID automatica. Se utiliza para crar nuevas paginas
@@ -27,6 +27,8 @@ public:
     int getPeso() { return peso; }
     IP getDestino() { return destino; }
     int getCont() { return contPaginas; };
+
+    //Setters
     void setID(int id) { this->id = id; };
     void setContador(int cont) { contPaginas = cont; };
 };
