@@ -19,7 +19,7 @@ Terminal::Terminal(std::uint8_t  ipTerminal, Router* router)
 
 uint8_t Terminal::getIpRouter()
 {
-    this->routerPadre->getIp();
+    return this->routerPadre->getIp();
 }
 
 /*

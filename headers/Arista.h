@@ -20,6 +20,7 @@ public:
     friend class Router;
 
     Arista(int ancho_de_banda, Router* destino);
+    int getADB() { return ancho_de_banda; };
     void setCiclo(double ciclos) { this->ciclos = ciclos; };
     //void calcPeso() { peso = 1/ancho_de_banda; };
 };
