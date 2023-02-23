@@ -262,12 +262,12 @@ void Administrador::Dijkstra(short IPorigen, int opcion)
     }
 }
 
-void Administrador::leerArchivo()
+void Administrador::leerArchivo(int opcion)
 {
-    cout << "Leyendo archivo con informacion de la red" <<endl;
+    printf("Leyendo archivo %d con información de la red\n", opcion);
 
     char nombre[100];
-    snprintf(nombre, 100, "%s/config2.txt", rutaActual());
+    snprintf(nombre, 100, "%s/config%d.txt", rutaActual(), opcion);
 
     FILE* fp;
     fp = fopen(nombre, "r");
@@ -376,6 +376,20 @@ void Administrador::imprimirTermianles()
     cout << endl << "Impresion de " << RED << " Paginas" << RESET << endl;
     Lista<Terminal>* i = terminales;
 
+    char nombreArchivo[100];
+    snprintf(nombreArchivo, 100, "%s/salida/Terminales.txt", rutaActual());
+    FILE* fp = fopen(nombreArchivo, "a");
+
+    if(fp == nullptr)
+    {
+        fclose(fp);
+        cout << "Error al Abrir Routers.txt" << endl;
+        exit(1);
+    }
+
+    fprintf(fp, "\nCICLO %d:\n", this->contCiclos);
+    fclose(fp);
+
     while(!i->esvacia())
     {
         Terminal* aux = i->cabeza();
@@ -387,6 +401,10 @@ void Administrador::imprimirTermianles()
         i = i->resto();
     }
 
+    fp = fopen(nombreArchivo, "a");
+    fprintf(fp, "-----------------------------------------------------------------\n");
+    fclose(fp);
+
     cout << endl << " ------------------------------------------------------------------ " << endl;
 }
 
@@ -395,13 +413,47 @@ void Administrador::imprimirPaquetes()
     //cout << endl << endl << "Impresion de " << RED << " Paquetes" << RESET << endl;
     Router* aux = routerCzo;
 
-    while(aux != nullptr){
-        //cout << endl << REVERSED;
-        //printf("Router %d:", aux->IP);
-        //cout << RESET <<endl;
-        aux->imprimirPaqs(this->contCiclos);
+    char nombreArchivo[100];
+    snprintf(nombreArchivo, 100, "%s/salida/Routers.txt", rutaActual());
+    FILE* fp = fopen(nombreArchivo, "a");
+
+    if(fp == nullptr)
+    {
+        fclose(fp);
+        cout << "Error al Abrir Routers.txt" << endl;
+        exit(1);
+    }
+
+    fprintf(fp, "\nCICLO %d:\n", this->contCiclos);
+    fclose(fp);
+
+    while(aux != nullptr)
+    {
+        aux->imprimirPaqs();
         aux = aux->next;
     }
 
-    //cout << endl << " ------------------------------------------------------------------ " << endl;
+    fp = fopen(nombreArchivo, "a");
+    fprintf(fp, "-----------------------------------------------------------------\n");
+    fclose(fp);
+}
+
+void Administrador::limpiarArchivos() {
+
+    char nombreArchivo[100];
+    snprintf(nombreArchivo, 100, "%s/salida/PagGeneradas.txt", rutaActual());
+    FILE *fp = fopen(nombreArchivo, "w");
+    fclose(fp);
+
+    snprintf(nombreArchivo, 100, "%s/salida/PagEnDestino.txt", rutaActual());
+    fp = fopen(nombreArchivo, "w");
+    fclose(fp);
+
+    snprintf(nombreArchivo, 100, "%s/salida/Routers.txt", rutaActual());
+    fp = fopen(nombreArchivo, "w");
+    fclose(fp);
+
+    snprintf(nombreArchivo, 100, "%s/salida/Terminales.txt", rutaActual());
+    fp = fopen(nombreArchivo, "w");
+    fclose(fp);
 }

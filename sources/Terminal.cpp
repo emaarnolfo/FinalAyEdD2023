@@ -79,16 +79,24 @@ void Terminal::enviarPaginas()
  */
 void Terminal::imprimirPaginas()
 {
+
     Lista<Pagina>* i = (Lista<Pagina>*)pagPendiendes;
+
+    char nombreArchivo[100];
+    snprintf(nombreArchivo, 100, "%s/salida/Terminales.txt", rutaActual());
+    FILE* fp = fopen(nombreArchivo, "a");
 
     if(!pagPendiendes->esvacia()){
         printf("Paginas listas generadas para mandar al Router %d \n", getIpRouter());
+        fprintf(fp, "Paginas listas generadas para mandar al Router %d \n", getIpRouter());
+
 
         while (!i->esvacia()) {
             Pagina *aux = i->cabeza();
             cout << "Pagina:" << aux->getId() << " peso:" << aux->getPeso() << " destino:";
             printf("%d.%d\n", aux->getDestino().ipTerminal, aux->getDestino().ipRouter);
-
+            fprintf(fp, "idPagina:%-4d Peso:%-4d Origen:%d.%-4d Destino:%d.%d\n",
+                    aux->getId(), aux->getPeso(), this->getIpRouter(), this->getIpTerminal(), aux->getDestino().ipRouter, aux->getDestino().ipTerminal);
             i = i->resto();
         }
     }
@@ -97,10 +105,15 @@ void Terminal::imprimirPaginas()
         i = (Lista<Pagina> *) pagRecibidas;
 
         cout << "Paginas recibidas de otras terminales: " << endl;
+        fprintf(fp, "Paginas recibidas de otras terminales:\n");
         while (!i->esvacia()) {
             Pagina *aux = i->cabeza();
             cout << "Pagina: " << aux->getId() << " peso: " << aux->getPeso() << endl;
+            fprintf(fp, "idPagina:%-4d Peso:%-4d Origen:%d.%-4d Destino:%d.%d\n",
+                    aux->getId(), aux->getPeso(), this->getIpRouter(), this->getIpTerminal(), aux->getDestino().ipRouter, aux->getDestino().ipTerminal);
             i = i->resto();
         }
     }
+
+    fclose(fp);
 }

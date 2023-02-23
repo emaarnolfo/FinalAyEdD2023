@@ -70,7 +70,7 @@ public:
     void armarPaginas();                            //Arma la pagina si se encuentran todos los paquetes de la misma
     void enviarPaquetes();                          //Envia paquetes al siguiente Router
     void enviarPaginas();                           //Envia las paginas armadas a la terminal que corresponda
-    void imprimirPaqs(int numCiclos);               //Imprime los paquetes que se encuentran en el Router
+    void imprimirPaqs();               //Imprime los paquetes que se encuentran en el Router
     void calcularCiclos();                          //Calcula los ciclos de demora segun la cantidad de trafico
 };
 

@@ -321,6 +321,7 @@ void Router::enviarPaginas()
             fprintf(fp, "idPagina:%-4d Peso:%-4d Destino:%d.%d\n",
                     aux->getId(), aux->getPeso(), aux->getDestino().ipRouter, aux->getDestino().ipTerminal);
     }
+
     fclose(fp);
 }
 
@@ -329,12 +330,17 @@ void Router::enviarPaginas()
  * y los paquetes que se encuentran en la cola de envios listos para ser enviados
  * en el siguiente turno
  */
-void Router::imprimirPaqs(int numCiclos)
+void Router::imprimirPaqs()
 {
     char nombreArchivo[100];
-    snprintf(nombreArchivo, 100, "%s/salida/paquetes%d.txt", rutaActual(), numCiclos);
+    snprintf(nombreArchivo, 100, "%s/salida/Routers.txt", rutaActual());
     FILE* fp = fopen(nombreArchivo, "a");
-    fprintf(fp, "\nROUTER %d:\n", this->IP);
+    fprintf(fp, "  ROUTER %d:\n", this->IP);
+
+    if(fp == nullptr){
+        printf("Error al abrir el archivo %s\n", nombreArchivo);
+        exit(1);
+    }
 
     map<int, int> enDestino;
     Lista<Paquete>* cola = paqEnDestino;
@@ -350,7 +356,7 @@ void Router::imprimirPaqs(int numCiclos)
     }
 
     if(!enDestino.empty())
-        fprintf(fp, "\tPaquetes en destino:\n");
+        fprintf(fp, "\t Paquetes en destino:\n");
 
     while(!enDestino.empty())
     {
@@ -374,7 +380,7 @@ void Router::imprimirPaqs(int numCiclos)
         }
 
         if(!enColaEnvios.empty() && i == colaEnvios.begin())
-            fprintf(fp, "\tPaquetes en cola de envios:\n");
+            fprintf(fp, "\t Paquetes en cola de envios:\n");
 
         if(fp != nullptr){
             while (!enColaEnvios.empty()) {
@@ -385,8 +391,8 @@ void Router::imprimirPaqs(int numCiclos)
         }
     }
 
-    if(fp != nullptr)
-        fclose(fp);
+
+    fclose(fp);
 }
 
 /*
