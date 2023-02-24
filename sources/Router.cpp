@@ -456,6 +456,6 @@ void Router::calcularCiclos()
         double ciclos = (double)(pesoPaquetes/1000) / aux->ancho_de_banda;
 
         if(ciclos > 1)
-            aux->ciclos = ciclos;
+            aux->setCiclo(ciclos);
     }
 }

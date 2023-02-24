@@ -14,9 +14,7 @@
 #include <unistd.h>
 #include "Ruta.h"
 
-//Tamaño Maximo y Minimo de las paginas en MB
-#define TAM_MAX_PAG 20
-#define TAM_MIN_PAG 15
+
 
 using namespace std;
 

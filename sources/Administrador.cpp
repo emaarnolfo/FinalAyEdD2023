@@ -340,6 +340,7 @@ void Administrador::enviarPaginas()
     }
 }
 
+
 void Administrador::recalcular()
 {
     for(int i=0; i<nroRouters; i++)
@@ -349,7 +350,7 @@ void Administrador::recalcular()
         Dijkstra(i+1, 2);
 }
 
-void Administrador::ciclo()
+void Administrador::ciclo(int opc)
 {
     cout << BLACK << BG_YELLOW << " CICLO " << ++contCiclos <<" " << RESET << endl;
 
@@ -372,7 +373,7 @@ void Administrador::ciclo()
     for(int i=0; i<nroRouters; i++)
         getRouter(i+1)->enviarPaginas();
 
-    if(contCiclos % 2 == 0)
+    if(contCiclos % 2 == 0 && opc)
         recalcular();
 
     imprimirTermianles();

@@ -6,6 +6,7 @@ using namespace  std;
 
 int main() {
 
+
     cout << " ----------------------------------------------------------------" << endl;
     cout << "|                SIMULACION DE TRAFICO DE INTERNET               |"<< endl;
     cout << "| Este programa en C++ consiste en simular una red de Internet   |"<< endl;
@@ -24,12 +25,12 @@ int main() {
          << "Los siguientes se encuentran por defecto:" << endl <<endl;
 
     cout << "   - OPCION 1: Archivo 'config1.txt' el cual contiene " << endl
-         << "   una red compleja de varios Routers" << endl <<endl;
+         << "   una red de varios Routers y Terminales" << endl <<endl;
 
     cout << "   - OPCION 2: Archivo 'config2.txt' el cual contiene" << endl
-         << "   una red sencilla que demuestra para demostrar con " << endl
-         << "   facilidad el cambio de los caminos en los paquetes "<< endl
-         << "   segun el trafico" << endl <<endl;
+         << "   una red sencilla ideal para visualizar con " << endl
+         << "   facilidad el cambio en los caminos de los paquetes "<< endl
+         << "   según el trafico" << endl <<endl;
 
     cout << "Para armar uno propio cree un archivo txt llamado configX.txt," << endl
          << "siendo X un numero mayor a 3. El archivo debe incluir " << endl
@@ -61,8 +62,9 @@ int main() {
         printf("Archivo de configuración en ejecucion: 'config%d.txt'\n\n", numArchivo);
         cout << "1: Generar Paginas aleatorias" << endl;
         cout << "2: Generar Paginas en terminal específica" << endl;
-        cout << "3: Ciclo completo" << endl;
-        cout << "4: Ejecutar n ciclos:" << endl;
+        cout << "3: Ciclo completo " << endl;
+        cout << "4: Ejecutar n ciclos sin recomputar:" << endl;
+        cout << "5: Ejecutar n ciclos contemplando el tráfico:" << endl;
 
         cout << "0: Salir" << endl <<endl;
 
@@ -70,13 +72,13 @@ int main() {
         cin >> opc;
         cout << endl;
 
+        int num_ciclos, pagsAleatorias;
+
         system("clear");
 
         switch (opc) {
 
             case 1:
-                int pagsAleatorias;
-
                 cout << "Se generarán paginas con origenes y destinos aleatorios y se enviaran a los Routers." << endl
                      << "Indique el numero de paginas que desea crear: ";
                 cin >> pagsAleatorias;
@@ -110,16 +112,23 @@ int main() {
                 break;
 
             case 3:
-                admin->ciclo();
+                admin->ciclo(0);
                 break;
 
             case 4:
-                int num_ciclos;
                 cout << "Inserte la cantidad de ciclos a ejecutar: ";
                 cin >> num_ciclos;
 
                 for(int i=0; i < num_ciclos; i++)
-                    admin->ciclo();
+                    admin->ciclo(0);
+                break;
+
+            case 5:
+                cout << "Inserte la cantidad de ciclos a ejecutar: ";
+                cin >> num_ciclos;
+
+                for(int i=0; i < num_ciclos; i++)
+                    admin->ciclo(1);
                 break;
 
             case 0:
@@ -132,7 +141,16 @@ int main() {
         cin.get();
     }
 
+
 /*
+
+    Administrador *admin = new Administrador();
+    admin->limpiarArchivos();
+    admin->leerArchivo(2);
+
+    for (int i = 0; i < admin->nroRouters; i++)
+        admin->Dijkstra(i + 1, 1);
+
     //Se generan paginas en las terminales
     Terminal *terminal = admin->terminales->get(2);
     terminal->generarPagina();
@@ -147,10 +165,13 @@ int main() {
 
     admin->ciclo();
     admin->ciclo();
+    admin->recalcular();
     admin->ciclo();
     admin->ciclo();
+    admin->recalcular();
     admin->ciclo();
     admin->ciclo();
+    admin->recalcular();
     admin->ciclo();
     admin->ciclo();
 
@@ -159,6 +180,7 @@ int main() {
     cout << endl;
     cout << endl;
 
-    */
+/*
+*/
     return 0;
 }

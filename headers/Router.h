@@ -12,9 +12,7 @@
 #include "Ruta.h"
 #include <map>
 
-//Tamaño de los paquetes de las paginas en KB
-#define TAM_MAX_PAQ 2500
-#define TAM_MIN_PAQ 1000
+
 
 using namespace std;
 

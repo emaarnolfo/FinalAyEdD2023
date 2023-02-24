@@ -25,6 +25,7 @@ class Administrador : public Ruta {
 private:
     int routers = 255;
     int matriz[MAX_ROUTERS][MAX_ROUTERS];
+    double matrizCiclos[MAX_ROUTERS][MAX_ROUTERS];
     int contCiclos;
 
 public:
@@ -43,12 +44,13 @@ public:
     void mostrarListaAdyacencia();                                              //Muestra lista de adyacencia de toda la red construida
     void Dijkstra(short int IPorigen, int opcion);                              //Calcula las rutas mas cortas entre los vertices
     void leerArchivo(int opcion);                                               //Lee el archivo de configuracion y arma la red del mismo
-    void ciclo();                                                               //Realiza un ciclo completo de la red.
+    void ciclo(int opc);                                                               //Realiza un ciclo completo de la red.
     void enviarPaginas();                                                       //Envia las paginas que se encuentran en las terminales hacia sus Routers correspondientes
     void imprimirTermianles();                                                  //Imprime las paginas que contiene cada termianl
     void imprimirPaquetes();                                                    //Imprime los paquetes que contiene cada Router
     void recalcular();                                                          //Recalcula los caminos en base a las colas de trafico de cada Router
     void limpiarArchivos();                                                     //Limpia los archivos que se van a utilizar para guardar la informacion
+    void calcCiclos();
 
 };
 
