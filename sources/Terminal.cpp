@@ -57,6 +57,9 @@ void Terminal::generarPagina()
                 nuevaPag->getId(), nuevaPag->getPeso(), this->getIpRouter(), this->getIpTerminal(), nuevaPag->getDestino().ipRouter, nuevaPag->getDestino().ipTerminal);
         fclose(fp);
     }
+
+    printf("idPagina:%-4d Peso:%-4d Origen:%d.%-4d Destino:%d.%d\n",
+           nuevaPag->getId(), nuevaPag->getPeso(), this->getIpRouter(), this->getIpTerminal(), nuevaPag->getDestino().ipRouter, nuevaPag->getDestino().ipTerminal);
 }
 
 /*
@@ -88,14 +91,14 @@ void Terminal::imprimirPaginas()
 
     if(!pagPendiendes->esvacia()){
         printf("Paginas listas generadas para mandar al Router %d \n", getIpRouter());
-        fprintf(fp, "Paginas listas generadas para mandar al Router %d \n", getIpRouter());
+        fprintf(fp, "\t  Paginas listas generadas para mandar al Router %d \n", getIpRouter());
 
 
         while (!i->esvacia()) {
             Pagina *aux = i->cabeza();
             cout << "Pagina:" << aux->getId() << " peso:" << aux->getPeso() << " destino:";
             printf("%d.%d\n", aux->getDestino().ipTerminal, aux->getDestino().ipRouter);
-            fprintf(fp, "idPagina:%-4d Peso:%-4d Origen:%d.%-4d Destino:%d.%d\n",
+            fprintf(fp, "\t\tidPagina:%-4d Peso:%-4d Origen:%d.%-4d Destino:%d.%d\n",
                     aux->getId(), aux->getPeso(), this->getIpRouter(), this->getIpTerminal(), aux->getDestino().ipRouter, aux->getDestino().ipTerminal);
             i = i->resto();
         }
@@ -105,11 +108,11 @@ void Terminal::imprimirPaginas()
         i = (Lista<Pagina> *) pagRecibidas;
 
         cout << "Paginas recibidas de otras terminales: " << endl;
-        fprintf(fp, "Paginas recibidas de otras terminales:\n");
+        fprintf(fp, "\t  Paginas recibidas de otras terminales:\n");
         while (!i->esvacia()) {
             Pagina *aux = i->cabeza();
             cout << "Pagina: " << aux->getId() << " peso: " << aux->getPeso() << endl;
-            fprintf(fp, "idPagina:%-4d Peso:%-4d Origen:%d.%-4d Destino:%d.%d\n",
+            fprintf(fp, "\t\tidPagina:%-4d Peso:%-4d Origen:%d.%-4d Destino:%d.%d\n",
                     aux->getId(), aux->getPeso(), this->getIpRouter(), this->getIpTerminal(), aux->getDestino().ipRouter, aux->getDestino().ipTerminal);
             i = i->resto();
         }

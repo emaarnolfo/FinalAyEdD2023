@@ -264,7 +264,7 @@ void Administrador::Dijkstra(short IPorigen, int opcion)
 
 void Administrador::leerArchivo(int opcion)
 {
-    printf("Leyendo archivo %d con información de la red\n", opcion);
+    printf("\nLeyendo archivo %d con información de la red\n", opcion);
 
     char nombre[100];
     snprintf(nombre, 100, "%s/config%d.txt", rutaActual(), opcion);
@@ -279,7 +279,7 @@ void Administrador::leerArchivo(int opcion)
 
     // Leer la cantidad de routers
     fscanf(fp, "Routers: %d\n", &routers);
-    printf("Cantidad de routers: %d\n", routers);
+    printf("\nCantidad de routers: %d\n", routers);
     for (int i = 0; i < routers; ++i) {
         addRouter();
         cout << "Se agrega router " << i+1 << endl;
@@ -299,18 +299,23 @@ void Administrador::leerArchivo(int opcion)
         fgets(buffer, 100, fp);
     }
 
+    printf("\nImpresion de Terminales:\n");
     char line[100];
     while (fgets(line, sizeof(line), fp) != NULL) {
         int ipRouter = atoi(&line[0]);
-        int numTerminals = atoi(&line[2]);
-        for (int i = 1; i <= numTerminals; i++) {
-            printf("Se crea terminal %d en Router %d\n", i, ipRouter);
-            addTerminal(ipRouter, i);
+
+        char* ref = strchr(line, ':');
+        if (ref != NULL) {
+            int numTerminals = atoi(ref + 1);
+            for (int i = 1; i <= numTerminals; i++) {
+                printf("Se crea terminal %d en Router %d\n", i, ipRouter);
+                addTerminal(ipRouter, i);
+            }
         }
     }
 
     // Insertar las aristas
-    printf("Aristas y anchos de banda:\n");
+    printf("\nAristas y anchos de banda:\n");
     for (int i = 1; i <= routers; i++) {
         for (int j = 1; j <= routers; j++) {
             if(matriz[i][j] != 0) {
@@ -367,6 +372,9 @@ void Administrador::ciclo()
     for(int i=0; i<nroRouters; i++)
         getRouter(i+1)->enviarPaginas();
 
+    if(contCiclos % 2 == 0)
+        recalcular();
+
     imprimirTermianles();
     imprimirPaquetes();
 }
@@ -387,7 +395,7 @@ void Administrador::imprimirTermianles()
         exit(1);
     }
 
-    fprintf(fp, "\nCICLO %d:\n", this->contCiclos);
+    fprintf(fp, "CICLO %d:\n", this->contCiclos);
     fclose(fp);
 
     while(!i->esvacia())
@@ -396,13 +404,16 @@ void Administrador::imprimirTermianles()
         cout <<endl << REVERSED;
         printf("Terminal %d.%d", aux->getIpRouter(), aux->getIpTerminal());
         cout << RESET << endl;
+        fp = fopen(nombreArchivo, "a");
+        fprintf(fp, "\tTerminal %d.%d:\n", aux->getIpRouter(), aux->getIpTerminal());
+        fclose(fp);
 
         aux->imprimirPaginas();
         i = i->resto();
     }
 
     fp = fopen(nombreArchivo, "a");
-    fprintf(fp, "-----------------------------------------------------------------\n");
+    fprintf(fp, "\n-----------------------------------------------------------------\n");
     fclose(fp);
 
     cout << endl << " ------------------------------------------------------------------ " << endl;
@@ -438,6 +449,10 @@ void Administrador::imprimirPaquetes()
     fclose(fp);
 }
 
+/*
+ * Limpia los archivos que se utilizaran para imprimir la informacion y mostrar
+ * como se va desarrollando el programa
+ */
 void Administrador::limpiarArchivos() {
 
     char nombreArchivo[100];

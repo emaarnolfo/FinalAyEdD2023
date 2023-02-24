@@ -15,21 +15,26 @@ int main() {
     cout << "| de datos como listas y colas enlazadas y grafos direccionales. |"<< endl;
     cout << "| Asi como también algoritmos como el de Dijkstra.               |"<< endl;
     cout << " ----------------------------------------------------------------" << endl;
+    cout << "Realizado por Arnolfo Emanuel" << endl;
     cout << endl << endl;
 
     int numArchivo;
 
-    cout << "Elija el tipo de archivo que quiere abrir. Los siguientes se encuentran por defecto:" << endl <<endl;
+    cout << "Elija el tipo de archivo que quiere abrir."
+         << "Los siguientes se encuentran por defecto:" << endl <<endl;
 
-    cout << "   - OPCION 1: Archivo 'config1.txt' el cual contiene una red compleja " << endl
-         << "que genera paquetes aleatorios con destinos aleatorios y muestra los resultados." << endl
-         << "de cada ciclo en los archivos que va generando" << endl << endl;
+    cout << "   - OPCION 1: Archivo 'config1.txt' el cual contiene " << endl
+         << "   una red compleja de varios Routers" << endl <<endl;
 
-    cout << "   - OPCION 2: Archivo 'config2.txt' el cual contiene una red sencilla que demuestra " << endl
-         << "como cambian la ruta los paquetes cuando hay mucho trafico." << endl <<endl;
+    cout << "   - OPCION 2: Archivo 'config2.txt' el cual contiene" << endl
+         << "   una red sencilla que demuestra para demostrar con " << endl
+         << "   facilidad el cambio de los caminos en los paquetes "<< endl
+         << "   segun el trafico" << endl <<endl;
 
-    cout << "Para armar uno propio cree un archivo txt llamado configX.txt, siendo X un numero mayor a 3" << endl
-         << "El archivo debe incluir la cantidad de Routers, la matriz de adyacencia y las terminales de c/router" << endl << endl;
+    cout << "Para armar uno propio cree un archivo txt llamado configX.txt," << endl
+         << "siendo X un numero mayor a 3. El archivo debe incluir " << endl
+         << "la cantidad de Routers, la matriz de adyacencia" << endl
+         << " y las terminales de c/router" << endl << endl;
 
     cin >> numArchivo;
 
@@ -37,63 +42,97 @@ int main() {
     admin->limpiarArchivos();
     admin->leerArchivo(numArchivo);
 
+    for (int i = 0; i < admin->nroRouters; i++)
+        admin->Dijkstra(i + 1, 1);
+
     cout << endl << endl;
-/*
-    int opc;
+
+    int opc = 1;
+
+    cout << "Lectura correcta del archivo, presione enter para continuar" << endl;
+    cin.get();
+    cin.get();
+
+    system("clear");
 
     while(opc!= 0)
     {
+        system("clear");
+        printf("Archivo de configuración en ejecucion: 'config%d.txt'\n\n", numArchivo);
         cout << "1: Generar Paginas aleatorias" << endl;
-        cout << "2: Imprimir Terminales" << endl;
-        cout << "3: Imprimir Routers" << endl;
+        cout << "2: Generar Paginas en terminal específica" << endl;
         cout << "3: Ciclo completo" << endl;
-        cout << "4: Recalcular rutas" << endl;
-        cout << "5: Ejecutar n ciclos:" << endl;
+        cout << "4: Ejecutar n ciclos:" << endl;
+
         cout << "0: Salir" << endl <<endl;
 
-        cout << "Inserte la opcion que desee: ";
+        cout << "Ingrese la opcion que desee: ";
         cin >> opc;
+        cout << endl;
+
+        system("clear");
+
         switch (opc) {
+
             case 1:
-                cout << "Generar paginas" << endl;
+                int pagsAleatorias;
+
+                cout << "Se generarán paginas con origenes y destinos aleatorios y se enviaran a los Routers." << endl
+                     << "Indique el numero de paginas que desea crear: ";
+                cin >> pagsAleatorias;
+
+                admin->generarPaginas(pagsAleatorias);
+                admin->enviarPaginas();
+
                 break;
 
             case 2:
+                int numPags, ipTerminal, ipRouter;
+                Terminal* aux;
 
+                cout << "Indique el numero de paginas que desea crear: ";
+                cin >> numPags;
+
+                cout << "Indique la IP del Router: ";
+                cin >> ipRouter;
+
+                cout << "Indique la IP de la Terminal: ";
+                cin >> ipTerminal;
+
+                cout << endl;
+
+                aux = admin->getRouter(ipRouter)->getTerminal(ipTerminal);
+
+                for(int i=0; i<numPags; i++)
+                    aux->generarPagina();
+
+                admin->enviarPaginas();
                 break;
 
             case 3:
-
+                admin->ciclo();
                 break;
 
             case 4:
-
-                break;
-
-            case 5:
                 int num_ciclos;
                 cout << "Inserte la cantidad de ciclos a ejecutar: ";
                 cin >> num_ciclos;
 
-                for(int i=0; i <= num_ciclos; i++)
-                {
+                for(int i=0; i < num_ciclos; i++)
                     admin->ciclo();
-                    if(i % 2 == 0 && i != 0)
-                        admin->recalcular();
-                }
-
                 break;
 
-            case 6:
+            case 0:
                 return 0;
         }
+        cout << endl;
 
+        cout << "Presione enter para continuar ";
+        cin.get();
         cin.get();
     }
 
-
 /*
- */
     //Se generan paginas en las terminales
     Terminal *terminal = admin->terminales->get(2);
     terminal->generarPagina();
@@ -108,109 +147,18 @@ int main() {
 
     admin->ciclo();
     admin->ciclo();
-    admin->recalcular();
     admin->ciclo();
     admin->ciclo();
-    admin->recalcular();
     admin->ciclo();
     admin->ciclo();
-    admin->recalcular();
     admin->ciclo();
     admin->ciclo();
-
-
 
     //admin->generarPaginas(admin->nroTerminales);
 
     cout << endl;
     cout << endl;
 
-
-
-
-    /*
-    while (opc != 16)
-    {
-        system("clear");
-
-        cout << "1. Siguiente ciclo" << endl;
-        cout << "2. Insertar arista" << endl;
-        cout << "3. Obtener tamano" << endl;
-        cout << "4. Mostrar lista de adyacencia" << endl;
-        cout << "13. Dijkstra" << endl;
-        cout << "16. Salir" << endl;
-
-        cout << "\nIngrese una opcion del menu: ";
-        cin >> opc;
-
-        system("clear");      //El comando 'cls' limpia la consola
-
-        switch (opc)
-        {
-            case 1:
-            {
-                short int IP;
-                cout << "Ingrese el IP del Router: ";
-                cin >> IP;
-
-                admin->addRouter(IP);
-
-                break;
-            }
-            case 2:
-            {
-                if (admin->esVacio())
-                    cout << "El grafo esta vacio" << endl;
-                else
-                {
-                    short int IPorigen, IPdestino;
-                    int ancho_de_banda;
-                    cout << "Ingrese la IP del Router origen: ";
-                    cin >> IPorigen;
-                    cout << "Ingrese la IP del Router destino: ";
-                    cin >> IPdestino;
-                    cout << "Ingrese el precio: ";
-                    cin >> ancho_de_banda;
-
-                    admin->addArista(IPorigen,IPdestino, ancho_de_banda);
-                }
-                break;
-            }
-            case 3:
-            {
-                cout << "El grafo tiene " << admin->getTamanio() << " vertices" << endl;
-                break;
-            }
-            case 4:
-            {
-                if (admin->esVacio())
-                    cout << "El grafo esta vacio" << endl;
-                else
-                    admin->mostrarListaAdyacencia();
-                break;
-            }
-            case 13:
-            {
-                if (admin->esVacio())
-                    cout << "El grafo esta vacio" << endl;
-                else
-                {
-                    short int IPorigen;
-                    short int ipDestino;
-                    cout << "Ingrese el nombre del vertice origen: ";
-                    cin >> IPorigen;
-
-                    admin->Dijkstra(IPorigen);
-                }
-                break;
-            }
-            case 16:
-            {
-                return 0;
-            }
-        }
-        cin.get();
-        cin.get();
-    }*/
+    */
     return 0;
 }
